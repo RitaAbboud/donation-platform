@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
-import { LogIn, Mail, Lock, Heart, ArrowRight, Sparkles } from "lucide-react";
+import { Mail, Lock, ArrowRight, ArrowLeft, Loader2, Sparkles } from "lucide-react";
 
 export default function LoginDialog() {
   const router = useRouter();
@@ -21,94 +21,104 @@ export default function LoginDialog() {
       return;
     }
     setLoading(false);
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fae9d7] bg-[radial-gradient(circle_at_bottom_left,_#f3a55225,_transparent)] p-6">
-      <div className="w-full max-w-[420px]">
-        {/* Brand Identity */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#e25e2d] to-[#f3a552] rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-            <div className="relative p-4 bg-white rounded-2xl shadow-sm border border-orange-100">
-              <Heart className="w-8 h-8 text-[#e25e2d] fill-[#e25e2d]" />
-            </div>
-          </div>
-          
-        </div>
-
-        <div className="bg-white  backdrop-blur-xl rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(226,94,45,0.1)] overflow-hidden border border-white p-8 md:p-10">
-          <div className="mb-8">
-            <h2 className="mt-4 text-[#222222] font-black text-xl tracking-tight flex items-center gap-2">
-            Welcome Back <Sparkles className="w-4 h-4 text-[#f3a552]" />
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white selection:bg-[#fae9d7]">
+      
+      {/* Left Column: Brand Messaging (Matches Signup) */}
+      <div className="hidden lg:flex flex-col justify-center p-12 xl:p-20 bg-[#fae9d7] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#f3a552]/10 rounded-full -mr-20 -mt-20" />
+        
+        <div className="max-w-md relative z-10">
+          <div className="w-16 h-1 bg-[#f3a552] mb-8 rounded-full" />
+          <h2 className="text-4xl xl:text-5xl font-bold text-[#222222] mb-6 leading-[1.1]">
+            Continue your <br /> impact journey.
           </h2>
-            <p className="text-[#333333]/60 text-sm mt-2 font-medium">Your kindness continues here.</p>
+          <p className="text-lg text-[#333333]/70 font-light leading-relaxed">
+            Welcome back! Log in to manage your donations, track your impact, and discover new causes that need your help.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Column: The Form */}
+      <div className="flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-20">
+        <div className="w-full max-w-sm mx-auto">
+          
+          <button 
+            onClick={() => router.push("/")} 
+            className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#e25e2d] mb-8 sm:mb-12 transition-all p-2 -ml-2"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> 
+            Back to home
+          </button>
+
+          <div className="mb-8 sm:mb-10">
+            <h1 className="text-3xl sm:text-4xl font-bold text-[#222222] tracking-tight flex items-center gap-3">
+              Welcome back <Sparkles className="w-6 h-6 text-[#f3a552]" />
+            </h1>
+            <p className="text-gray-400 mt-3 text-base sm:text-lg font-light">Enter your details to sign in.</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            {/* Email Input */}
-            <div className="group">
-              <div className="relative transition-all duration-300">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e25e2d] w-5 h-5 transition-colors" />
+          <form onSubmit={handleLogin} className="space-y-6 sm:space-y-8">
+            <div className="space-y-4 sm:space-y-6">
+              
+              {/* Email Input */}
+              <div className="relative group">
+                <Mail className="absolute left-0 top-3 w-5 h-5 text-gray-300 group-focus-within:text-[#e25e2d] transition-colors" />
                 <input 
                   type="email" 
                   placeholder="Email Address" 
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 focus:bg-white focus:border-[#f3a552] focus:ring-4 focus:ring-[#f3a552]/10 rounded-2xl outline-none transition-all text-[#222222] font-medium placeholder:text-gray-400"
-                  value={email} 
-                  onChange={(e) => {setMsg(""); setEmail(e.target.value);}}
-                  required 
+                  className="w-full border-b-2 border-gray-100 focus:border-[#e25e2d] py-3 pl-8 outline-none transition-all text-base sm:text-lg placeholder:text-gray-300 bg-transparent rounded-none appearance-none"
+                  value={email}
+                  onChange={(e) => {setMsg(""); setEmail(e.target.value)}}
+                  required
                 />
               </div>
-            </div>
-
-            {/* Password Input */}
-            <div className="group">
-              <div className="relative transition-all duration-300">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e25e2d] w-5 h-5 transition-colors" />
+              
+              {/* Password Input */}
+              <div className="relative group">
+                <Lock className="absolute left-0 top-3 w-5 h-5 text-gray-300 group-focus-within:text-[#e25e2d] transition-colors" />
                 <input 
                   type="password" 
                   placeholder="Password" 
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 focus:bg-white focus:border-[#f3a552] focus:ring-4 focus:ring-[#f3a552]/10 rounded-2xl outline-none transition-all text-[#222222] font-medium placeholder:text-gray-400"
-                  value={password} 
-                  onChange={(e) => {setMsg(""); setPassword(e.target.value);}}
-                  required 
+                  className="w-full border-b-2 border-gray-100 focus:border-[#e25e2d] py-3 pl-8 outline-none transition-all text-base sm:text-lg placeholder:text-gray-300 bg-transparent rounded-none appearance-none"
+                  value={password}
+                  onChange={(e) => {setMsg(""); setPassword(e.target.value)}}
+                  required
                 />
               </div>
             </div>
 
-            {/* Remember & Forgot Links */}
-            <div className="flex items-center justify-between px-1">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[#e25e2d] focus:ring-[#e25e2d]/20 cursor-pointer" />
-                <span className="text-xs text-[#333333]/70 font-semibold group-hover:text-[#333333]">Remember me</span>
-              </label>
-              <button type="button" className="text-xs text-[#e25e2d] font-bold hover:underline underline-offset-4">Forgot Password?</button>
+            <div className="flex justify-end">
+               <button type="button" className="text-xs sm:text-sm font-semibold text-[#e25e2d] hover:text-[#f3a552] transition-colors">
+                  Forgot Password?
+               </button>
             </div>
 
             {msg && (
-              <div className="flex items-center gap-2 p-4 bg-red-50 rounded-2xl border border-red-100 animate-in fade-in zoom-in duration-200">
-                <p className="text-xs font-bold text-red-600 uppercase tracking-tight">{msg}</p>
+              <div className="text-sm p-3 rounded-lg bg-red-50 text-red-500 animate-in fade-in duration-300">
+                {msg}
               </div>
             )}
 
             <button 
-              type="submit" 
+              type="submit"
               disabled={loading}
-              className="group relative w-full bg-[#e25e2d] hover:bg-[#c94f24] text-white font-black py-4 rounded-2xl shadow-xl shadow-[#e25e2d]/20 transition-all active:scale-[0.98] disabled:bg-gray-200 disabled:shadow-none overflow-hidden"
+              className="w-full bg-[#e25e2d] hover:bg-[#f3a552] disabled:bg-gray-200 text-white font-bold py-4 sm:py-5 rounded-full transition-all flex items-center justify-center gap-3 shadow-xl shadow-gray-100 active:scale-[0.98]"
             >
-              <div className="flex items-center justify-center gap-2 relative z-10">
-                {loading ? "Authenticating..." : "Sign In "}
-                <LogIn className={`w-5 h-5 ${loading ? 'animate-pulse' : 'group-hover:translate-x-1 transition-transform'}`} />
-              </div>
+              {loading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>Sign In <ArrowRight className="w-5 h-5" /></>
+              )}
             </button>
           </form>
 
-          <div className="mt-10 pt-6 border-t border-gray-100/50 text-center">
-            <p className="text-center text-sm text-[#333333] font-medium">
-             New to our community? <a href="/register" className="text-[#e25e2d] hover:text-[#c94f24] transition-colors decoration-2 underline-offset-4 hover:underline">Create Account</a>
-            </p>
-          </div>
+          <p className="mt-8 sm:mt-10 text-center text-sm sm:text-base text-gray-400">
+            New to the community? <a href="/register" className="text-[#e25e2d] font-bold hover:underline underline-offset-4">Create Account</a>
+          </p>
         </div>
       </div>
     </div>

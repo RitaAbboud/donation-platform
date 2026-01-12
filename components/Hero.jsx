@@ -8,7 +8,7 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center justify-center">
       {/* Background Image */}
       <Image
-        src="/images/hero1.jpg"
+        src="/images/download (3).jpg"
         alt="Helping hands"
         fill
         priority

@@ -9,18 +9,13 @@ import Info from "../components/Info";
 export default function Page() {
   return (
     <>
-      {/* Navbar */}
       <NavBar />
-
-      {/* Main content */}
       <main>
         <Hero />
         <Features />
         <Mission />
         <Info />
       </main>
-
-      {/* Footer */}
       <footer id="info" className="bg-[#e25e2d] text-white py-10 mt-20">
         <div className="max-w-6xl mx-auto px-6 text-center space-y-4">
           <h3 className="text-2xl font-bold">One Hand</h3>

@@ -1,4 +1,12 @@
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  weight: "300", // This sets the light weight
+  variable: "--font-inter", // Optional: used for CSS variables
+});
 
 export const metadata = {
   title: "One Hand",
@@ -8,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-[#fae9d7] text-[#222]">
+      <body className={`${inter.className} antialiased text-[#222222] bg-[#fae9d7]`}>
         <main>{children}</main>
       </body>
     </html>
