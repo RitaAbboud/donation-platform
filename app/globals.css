@@ -1,1 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 @import "tailwindcss";
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #fae9d7;
+    font-family: 'Montserrat', sans-serif;
+    color: #222222;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+
+/* =========================
+   NAV LINK HOVER
+========================= */
+
+.nav-link {
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    transform: translateY(-3px);
+    color: #e25e2d;
+}
+
+
+/* =========================
+   HERO IMAGE
+========================= */
+
+.hero-image {
+    object-fit: cover;
+    object-position: top;
+}
+
+
+/* =========================
+   OPTIONAL TYPOGRAPHY TWEAKS
+========================= */
+
+h1,
+h2,
+h3 {
+    letter-spacing: 0.3px;
+}

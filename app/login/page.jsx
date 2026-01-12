@@ -1,9 +1,9 @@
 import LoginDialog from "../../components/loginPage/loginForm";
 export default function loginPage() {
-    return (
+    return ( 
         <div>
-            
-            <LoginDialog /></div>
+
+        <LoginDialog />  </div>
     )
 
 }
