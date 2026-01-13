@@ -23,6 +23,21 @@ export default function LoginDialog() {
     setLoading(false);
     router.push("/dashboard");
   }
+  async function handleResetPassword() {
+    if (!email){
+      setMsg("Please enter your email address to reset your password.");
+      return;
+    }
+    setLoading(true);
+    const {error} = await supabase.auth.resetPasswordForEmail(email, {redirectTo: `${window.location.origin}/resetPassword`});
+    if (error) {
+      setLoading(false);
+      setMsg(error.message);
+      return;
+    }
+    setMsg("Password reset email sent. Please check your inbox.");
+    setLoading(false);  
+  }
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white selection:bg-[#fae9d7]">
@@ -92,16 +107,18 @@ export default function LoginDialog() {
             </div>
 
             <div className="flex justify-end">
-               <button type="button" className="text-xs sm:text-sm font-semibold text-[#e25e2d] hover:text-[#f3a552] transition-colors">
+               <button type="button" onClick={handleResetPassword} className="text-xs sm:text-sm font-semibold text-[#e25e2d] hover:underline transition-colors">
                   Forgot Password?
                </button>
             </div>
 
-            {msg && (
-              <div className="text-sm p-3 rounded-lg bg-red-50 text-red-500 animate-in fade-in duration-300">
+            {msg == "Password reset email sent. Please check your inbox." ?(
+              <div className="text-sm p-3 rounded-lg bg-green-50 text-green-500 animate-in fade-in duration-300">
                 {msg}
               </div>
-            )}
+            ) :  <div className="text-sm p-3 rounded-lg bg-red-50 text-red-500 animate-in fade-in duration-300">
+                {msg}
+              </div> }
 
             <button 
               type="submit"

@@ -26,9 +26,9 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-20 max-w-4xl mx-auto px-6 text-center text-white animate-fadeInUp">
         {/* Hero heading - first sentence slightly smaller */}
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
           One Hand Can Change a Life
-        </h2>
+        </h1>
 
         {/* Hero paragraph - professionally split, second sentence stays */}
         <p className="text-sm md:text-base lg:text-lg mb-10 opacity-95 leading-relaxed">
