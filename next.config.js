@@ -5,7 +5,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-        pathname: '**', // This allows all images from Unsplash
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pflbeftnldkmmldeokyw.supabase.co',
+        pathname: '/storage/v1/object/public/**', 
       },
     ],
   },

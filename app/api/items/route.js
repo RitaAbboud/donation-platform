@@ -15,7 +15,7 @@ export  async function GET() {
         if (error) {
             return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
         }
-        console.log("API Data:", data);
+        
         // 3 Return the data as JSON that the query fetched successfully
         return NextResponse.json(data);
 
