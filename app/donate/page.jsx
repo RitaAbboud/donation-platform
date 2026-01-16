@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import { Poppins } from "next/font/google";
-import { MapPin, Upload } from "lucide-react";
+import { MapPin, Upload ,Phone} from "lucide-react";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -128,190 +128,186 @@ export default function DonatePage() {
 };
 
 
-  return (
-    <div className={`relative min-h-screen bg-[#fff6ef] overflow-hidden ${poppins.className}`}>
+ return (
+  <div className={`min-h-screen bg-[#fffcf9] text-slate-900 ${poppins.className}`}>
+    
+    {/* ===== BACKGROUND DECORATION (Subtle) ===== */}
+    <div className="absolute top-0 right-0 w-1/3 h-full bg-[#fae9d7]/20 z-0 hidden lg:block" />
 
-      {/* ===== TOP WAVE (HALF PAGE) ===== */}
-      <div className="absolute top-0 left-0 w-full h-[60vh] z-0">
-        <svg
-          viewBox="0 0 1200 300"
-          preserveAspectRatio="none"
-          className="w-full h-full"
-        >
-          <path
-            d="
-              M0,180
-              C150,260 350,80 600,140
-              C850,200 1050,120 1200,160
-              L1200,0
-              L0,0
-              Z
-            "
-            fill="#ffd8c2"
-          />
-        </svg>
-      </div>
+    <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 lg:py-20">
+      <div className="flex flex-col lg:flex-row gap-16 items-start">
+        
+        {/* LEFT SIDE: INSPIRATION */}
+        <div className="lg:w-1/3 space-y-6">
+          <button 
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-slate-400 hover:text-[#e25e2d] transition-colors text-sm font-bold uppercase tracking-widest"
+          >
+            ← Back to Shop
+          </button>
+          <h1 className="text-5xl font-black text-slate-900 leading-tight">
+            Give your items <br />
+            <span className="text-[#e25e2d]">New Life.</span>
+          </h1>
+          <p className="text-slate-500 text-lg leading-relaxed">
+            Your unwanted treasures could be exactly what someone else is searching for. 
+            Join our community of mindful sharing.
+          </p>
+          
+          <div className="p-6 bg-[#e25e2d]/5 rounded-2xl border border-[#e25e2d]/10">
+            <h4 className="font-bold text-[#e25e2d] mb-2">Why donate?</h4>
+            <ul className="text-sm text-slate-600 space-y-3">
+              <li className="flex gap-2">✨ Reduce waste in your city</li>
+              <li className="flex gap-2">🤝 Support neighbors in need</li>
+              <li className="flex gap-2">🧹 Declutter your space with love</li>
+            </ul>
+          </div>
+        </div>
 
-      {/* ===== DONATE CARD ===== */}
-      <div className="relative z-10 flex justify-center pt-[10vh] pb-40">
+        {/* RIGHT SIDE: THE FORM */}
+        <div className="w-full lg:w-2/3 bg-white border border-[#fae9d7] rounded-2xl shadow-sm p-8 md:p-12">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* CATEGORY */}
+            <div className="flex flex-col gap-2 md:col-span-1">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                Category
+              </label>
+              <select
+                name="category_id"
+                value={form.category_id}
+                onChange={handleChange}
+                required
+                className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
+              >
+                <option value="">Select a category</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
 
-        <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8 md:p-10">
+            {/* COST */}
+            <div className="flex flex-col gap-2 md:col-span-1">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                Price ($)
+              </label>
+              <input
+                type="number"
+                name="cost"
+                value={form.cost}
+                onChange={handleChange}
+                placeholder={fixedPrice ? `Max ${fixedPrice}` : "0.00"}
+                required
+                className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+              />
+            </div>
 
-          <h2 className="text-3xl font-bold text-center text-[#e25e2d]">
-  Donate an Item
-</h2>
-<p className="text-center text-gray-500 text-sm mt-2 mb-10">
-  Share items you no longer need and help someone today
-</p>
+            {/* DESCRIPTION */}
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                Item description
+              </label>
+              <input
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="e.g: Winter jacket, size M, gently used"
+                required
+                className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+              />
+            </div>
 
-<form onSubmit={handleSubmit} className="space-y-5">
+            {/* LOCATION */}
+            <div className="flex flex-col gap-2 md:col-span-1 relative">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                Location
+              </label>
+              <div className="relative">
+                <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#f3a552]" />
+                <input
+                  value={form.location}
+                  onChange={(e) => {
+                    setForm((p) => ({ ...p, location: e.target.value }));
+                    setLocationOpen(true);
+                  }}
+                  placeholder="Select city"
+                  required
+                  className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] pl-10 pr-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+                />
+              </div>
+              {locationOpen && (
+                <div className="absolute top-[75px] w-full rounded-xl border border-[#fae9d7] bg-white shadow-xl z-30 overflow-hidden">
+                  {locations
+                    .filter((l) => l.toLowerCase().includes(form.location.toLowerCase()))
+                    .map((l) => (
+                      <button
+                        key={l}
+                        type="button"
+                        onClick={() => handleLocationSelect(l)}
+                        className="block w-full text-left px-4 py-3 text-sm hover:bg-[#fff7f0] transition-colors border-b border-[#fae9d7] last:border-0"
+                      >
+                        {l}
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
 
-  {/* CATEGORY */}
-  <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-gray-700">
-      Category
-    </label>
-    <select
-      name="category_id"
-      value={form.category_id}
-      onChange={handleChange}
-      required
-      className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm
-                 focus:border-[#e25e2d] focus:ring-2 focus:ring-orange-100 outline-none"
-    >
-      <option value="">Select a category</option>
-      {categories.map((c) => (
-        <option key={c.id} value={c.id}>{c.name}</option>
-      ))}
-    </select>
-  </div>
+            {/* PHONE */}
+            <div className="flex flex-col gap-2 md:col-span-1">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                Contact Number
+              </label>
+              <div className="relative">
+                <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#f3a552]" />
+                <input
+                  name="phone_number"
+                  value={form.phone_number}
+                  onChange={handleChange}
+                  placeholder="71 234 567"
+                  required
+                  className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] pl-10 pr-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+                />
+              </div>
+            </div>
 
-  {/* DESCRIPTION */}
-  <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-gray-700">
-      Item description
-    </label>
-    <input
-      name="description"
-      value={form.description}
-      onChange={handleChange}
-      placeholder="e.g: Winter jacket, size M, gently used"
-      required
-      className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
-                 focus:border-[#e25e2d] focus:ring-2 focus:ring-orange-100 outline-none"
-    />
-  </div>
+            {/* IMAGE UPLOAD ZONE */}
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                Item Photo
+              </label>
+              <label className="group relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#fae9d7] p-8 cursor-pointer bg-[#fffcf9] hover:bg-white hover:border-[#e25e2d] transition-all">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
+                    <Upload size={24} className="text-[#e25e2d]" />
+                  </div>
+                  <span className="text-sm font-bold text-slate-600">
+                    {form.image ? form.image.name : "Click to upload image"}
+                  </span>
+                  <span className="text-xs text-slate-400">PNG, JPG up to 10MB</span>
+                </div>
+                <input type="file" hidden onChange={handleImage} />
+              </label>
+            </div>
 
-  {/* LOCATION */}
-  <div className="flex flex-col gap-1 relative">
-    <label className="text-sm font-medium text-gray-700">
-      Location
-    </label>
-    <div className="relative">
-      <MapPin
-        size={16}
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-      />
-      <input
-        value={form.location}
-        onChange={(e) => {
-          setForm((p) => ({ ...p, location: e.target.value }));
-          setLocationOpen(true);
-        }}
-        placeholder="Select your city"
-        required
-        className="w-full rounded-xl border border-gray-300 pl-10 pr-4 py-3 text-sm
-                   focus:border-[#e25e2d] focus:ring-2 focus:ring-orange-100 outline-none"
-      />
-    </div>
+            {/* SUBMIT */}
+            <div className="md:col-span-2 pt-4">
+              {costError && (
+                <p className="text-xs text-red-500 mb-4 font-bold uppercase tracking-tight">⚠️ {costError}</p>
+              )}
+              <button
+                disabled={loading}
+                className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-[#e25e2d] shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Processing..." : "Confirm Donation"}
+              </button>
+            </div>
 
-    {locationOpen && (
-      <div className="absolute top-[72px] w-full rounded-xl border bg-white shadow-lg z-30">
-        {locations
-          .filter((l) =>
-            l.toLowerCase().includes(form.location.toLowerCase())
-          )
-          .map((l) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => handleLocationSelect(l)}
-              className="block w-full text-left px-4 py-2 text-sm hover:bg-orange-50"
-            >
-              {l}
-            </button>
-          ))}
-      </div>
-    )}
-  </div>
-
-  {/* PHONE */}
-  <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-gray-700">
-      Phone number
-    </label>
-    <input
-      name="phone_number"
-      value={form.phone_number}
-      onChange={handleChange}
-      placeholder="e.g. 71 234 567"
-      required
-      className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
-                 focus:border-[#e25e2d] focus:ring-2 focus:ring-orange-100 outline-none"
-    />
-  </div>
-
-  {/* IMAGE */}
-  <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-gray-700">
-      Item image (optional)
-    </label>
-    <label className="flex items-center justify-between rounded-xl border border-dashed
-                      border-gray-300 px-4 py-3 cursor-pointer
-                      bg-gray-50 hover:bg-orange-50 transition">
-      <span className="text-sm text-gray-500">
-        {form.image ? form.image.name : "Upload an image"}
-      </span>
-      <Upload size={18} className="text-gray-500" />
-      <input type="file" hidden onChange={handleImage} />
-    </label>
-  </div>
-
-  {/* COST */}
-  <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-gray-700">
-      Price
-    </label>
-    <input
-      type="number"
-      name="cost"
-      value={form.cost}
-      onChange={handleChange}
-      placeholder={fixedPrice ? `Maximum ${fixedPrice}` : "Set a reasonable price"}
-      required
-      className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
-                 focus:border-[#e25e2d] focus:ring-2 focus:ring-orange-100 outline-none"
-    />
-    {costError && (
-      <span className="text-xs text-red-500">{costError}</span>
-    )}
-  </div>
-
-  {/* SUBMIT */}
-  <button
-    disabled={loading}
-    className="w-full mt-4 bg-[#e25e2d] text-white py-3 rounded-full
-               font-semibold tracking-wide
-               hover:bg-[#ff7b50] transition"
-  >
-    {loading ? "Submitting..." : "Donate Item"}
-  </button>
-
-</form>
-
+          </form>
         </div>
       </div>
-
     </div>
-  );
+  </div>
+);
 }

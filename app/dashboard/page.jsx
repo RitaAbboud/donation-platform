@@ -162,11 +162,10 @@ export default function DashboardPage() {
       </div>
     );
 
-  return (
-    <div
-      className={`min-h-screen bg-[#fff6ef] text-slate-800 ${poppins.className}`}
-    >
-      {/* ================= NAVBAR ================= */}
+return (
+    <div className={`min-h-screen bg-[#fff6ef] text-slate-800 ${poppins.className}`}>
+      
+      {/* ================= 1. NAVBAR ================= */}
       <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-[#fae9d7] px-4 md:px-8 py-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between gap-4">
@@ -206,7 +205,7 @@ export default function DashboardPage() {
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-gray-100 transition-colors"
               >
-                <LogOut size={18} />{" "}
+                <LogOut size={18} />
                 <span className="hidden sm:inline">Logout</span>
               </button>
 
@@ -229,8 +228,12 @@ export default function DashboardPage() {
             </button>
 
             <button
-              onClick={() => setShowFilters(true)}
-              className="flex items-center gap-2 px-4 py-1.5 bg-white border border-[#fae9d7] rounded-full font-semibold text-slate-600"
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-4 py-1.5 border rounded-full font-semibold transition-all ${
+                showFilters 
+                ? "bg-[#e25e2d] border-[#e25e2d] text-white" 
+                : "bg-white border-[#fae9d7] text-slate-600"
+              }`}
             >
               <SlidersHorizontal size={14} /> Filters
             </button>
@@ -245,14 +248,96 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      {/* ================= CATEGORY BUTTONS (ICON ROW) ================= */}
-      <div className="bg-white py-6 flex justify-center gap-8 shadow-sm overflow-x-auto">
+      {/* ================= 2. INLINE FILTERS (EXPANDABLE) ================= */}
+      <div
+        className={`overflow-hidden transition-all duration-500 ease-in-out bg-white border-b border-[#fae9d7] ${
+          showFilters ? "max-h-[500px] opacity-100 py-8" : "max-h-0 opacity-0 py-0"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
+          <div className="flex flex-col md:flex-row items-end gap-6">
+            {/* Category Select */}
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-xs font-black uppercase tracking-wider text-slate-400 ml-1">
+                Category
+              </label>
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
+              >
+                <option value="">All Categories</option>
+                {categories.map((c) => (
+                  <option key={c.name} value={c.name}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Location Select */}
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-xs font-black uppercase tracking-wider text-slate-400 ml-1">
+                Location
+              </label>
+              <select
+                value={locationSearch}
+                onChange={(e) => setLocationSearch(e.target.value)}
+                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
+              >
+                <option value="">All Locations</option>
+                {locations.map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Price Range */}
+            <div className="flex-1 w-full space-y-2">
+              <label className="text-xs font-black uppercase tracking-wider text-slate-400 ml-1">
+                Price Range
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  value={priceFrom}
+                  onChange={(e) => setPriceFrom(e.target.value)}
+                  className="w-1/2 rounded-2xl border border-[#fae9d7] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none"
+                />
+                <input
+                  type="number"
+                  placeholder="Max"
+                  value={priceTo}
+                  onChange={(e) => setPriceTo(e.target.value)}
+                  className="w-1/2 rounded-2xl border border-[#fae9d7] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2 w-full md:w-auto">
+              <button
+                onClick={applyFilters}
+                className="flex-1 md:flex-none bg-[#e25e2d] text-white px-8 py-3 rounded-2xl font-bold hover:bg-[#d14d1c] transition-all active:scale-95 shadow-lg shadow-orange-100"
+              >
+                Apply
+              </button>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="p-3 rounded-2xl border border-[#fae9d7] text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= 3. CATEGORY ICONS ================= */}
+      <div className="bg-white py-6 flex justify-center gap-8 shadow-sm overflow-x-auto no-scrollbar">
         {categories.map((cat) => (
           <button
             key={cat.name}
-            onClick={() =>
-              setActiveCategory(activeCategory === cat.name ? "" : cat.name)
-            }
+            onClick={() => setActiveCategory(activeCategory === cat.name ? "" : cat.name)}
             className="flex flex-col items-center gap-2 group min-w-[70px]"
           >
             <div
@@ -262,31 +347,17 @@ export default function DashboardPage() {
                   : "border-transparent group-hover:border-[#fae9d7]"
               }`}
             >
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="w-full h-full object-cover"
-              />
+              <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
             </div>
-            <span
-              className={`text-xs font-bold ${
-                activeCategory === cat.name
-                  ? "text-[#e25e2d]"
-                  : "text-slate-500"
-              }`}
-            >
+            <span className={`text-xs font-bold ${activeCategory === cat.name ? "text-[#e25e2d]" : "text-slate-500"}`}>
               {cat.name}
             </span>
           </button>
         ))}
       </div>
 
-      {/* ================= MAIN CONTENT ================= */}
-      <main
-        className={`max-w-7xl mx-auto p-6 md:p-8 transition-all duration-300 ${
-          showFilters ? "blur-md pointer-events-none" : ""
-        }`}
-      >
+      {/* ================= 4. MAIN CONTENT ================= */}
+      <main className="max-w-7xl mx-auto p-6 md:p-8">
         <header className="mb-8">
           <h1 className="text-3xl font-black text-slate-800 tracking-tight">
             Discover <span className="text-[#e25e2d]">Nearby</span> Treasures
@@ -303,110 +374,12 @@ export default function DashboardPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-[#f8d5b8]">
             <p className="text-[#f3a552] font-medium">No items found.</p>
-            <button
-              onClick={resetFilters}
-              className="mt-4 text-[#e25e2d] underline font-bold"
-            >
+            <button onClick={resetFilters} className="mt-4 text-[#e25e2d] underline font-bold">
               Show all items
             </button>
           </div>
         )}
       </main>
-
-      {/* ================= FILTER MODAL ================= */}
-      {showFilters && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg p-8 md:p-10 relative animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setShowFilters(false)}
-              className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <X size={24} className="text-slate-400" />
-            </button>
-
-            <h2 className="text-3xl font-black text-center text-[#e25e2d] mb-2">
-              Filter Items
-            </h2>
-            <p className="text-center text-gray-400 text-sm mb-8 font-medium">
-              Find exactly what you are looking for
-            </p>
-
-            <div className="space-y-6">
-              {/* Category Select */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">
-                  Category
-                </label>
-                <select
-                  value={filterCategory}
-                  onChange={(e) => setFilterCategory(e.target.value)}
-                  className="w-full rounded-2xl border border-gray-200 bg-[#fffcf9] px-4 py-3.5 text-sm focus:border-[#e25e2d] focus:ring-4 focus:ring-orange-50 outline-none transition-all appearance-none cursor-pointer"
-                >
-                  <option value="">All Categories</option>
-                  {categories.map((c) => (
-                    <option key={c.name} value={c.name}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Location Select */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">
-                  Location
-                </label>
-                <select
-                  value={locationSearch}
-                  onChange={(e) => setLocationSearch(e.target.value)}
-                  className="w-full rounded-2xl border border-gray-200 bg-[#fffcf9] px-4 py-3.5 text-sm focus:border-[#e25e2d] focus:ring-4 focus:ring-orange-50 outline-none transition-all appearance-none cursor-pointer"
-                >
-                  <option value="">All Locations</option>
-                  {locations.map((loc) => (
-                    <option key={loc} value={loc}>
-                      {loc}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Price Range */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">
-                  Price range
-                </label>
-                <div className="flex gap-4">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={priceFrom}
-                    onChange={(e) => setPriceFrom(e.target.value)}
-                    className="w-1/2 rounded-2xl border border-gray-200 px-4 py-3.5 text-sm focus:border-[#e25e2d] outline-none"
-                  />
-                  <input
-                    type="number"
-                    placeholder={
-                      filterCategory
-                        ? `Max $${categoryMaxPrices[filterCategory]}`
-                        : "Max"
-                    }
-                    value={priceTo}
-                    onChange={(e) => setPriceTo(e.target.value)}
-                    className="w-1/2 rounded-2xl border border-gray-200 px-4 py-3.5 text-sm focus:border-[#e25e2d] outline-none"
-                  />
-                </div>
-              </div>
-
-              <button
-                onClick={applyFilters}
-                className="w-full mt-4 bg-[#e25e2d] text-white py-4 rounded-2xl font-black text-lg hover:bg-[#d14d1c] shadow-lg shadow-orange-100 transition-all active:scale-[0.98]"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
