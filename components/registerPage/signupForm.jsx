@@ -31,10 +31,10 @@ export default function SignupDialog() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white selection:bg-[#fae9d7]">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white selection:bg-[#f8d5b8]">
       
       {/* Left Column: Brand Messaging */}
-      <div className="hidden lg:flex flex-col justify-center p-12 xl:p-20 bg-[#fae9d7] relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-center p-12 xl:p-20 bg-[#f8d5b8] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#e25e2d]/5 rounded-full -mr-20 -mt-20" />
         <div className="max-w-md relative z-10">
           <div className="w-16 h-1 bg-[#e25e2d] mb-8 rounded-full" />
@@ -116,7 +116,7 @@ export default function SignupDialog() {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-[#e25e2d] hover:bg-[#f3a552] disabled:bg-gray-200 text-white font-bold py-4 sm:py-5 rounded-full transition-all flex items-center justify-center gap-3 shadow-xl shadow-orange-100 active:scale-[0.98]"
+              className="w-full bg-[#e25e2d] hover:bg-[#ff7b50] disabled:bg-gray-200 text-white font-bold py-4 sm:py-5 rounded-full transition-all flex items-center justify-center gap-3 shadow-xl shadow-orange-100 active:scale-[0.98]"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

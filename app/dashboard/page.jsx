@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import ItemCard from "../../components/dashboardPage/itemCard";
 import { useEffect, useState } from "react";
-import { Heart, User, MapPin, SlidersHorizontal, Search, LogOut } from "lucide-react";
-
+import { Heart, User, MapPin, SlidersHorizontal, Search, LogOut, ChevronDown } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -23,50 +22,11 @@ export default function DashboardPage() {
 
   const locations = ["Beirut", "Tripoli", "Saida", "Jbeil", "Zahle"];
   const categories = ["Clothes", "Furniture", "Electronics", "Toys", "Books"];
-  // Function to fetch items 
-  async function getItems() {
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-        }/api/items`,
-        {
-          cache: "no-store", // Tells Next.js not to cache the result
-          headers: {
-            Pragma: "no-cache",
-            "Cache-Control": "no-cache",
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to fetch items");
-
-      const result = await res.json();
-
-     
-      const actualData = Array.isArray(result) ? result : result.data || [];
-
-      console.log("Fetched items successfully:", actualData);
-      setItems(actualData);
-    } catch (error) {
-      console.error("Fetch error:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-
 
   useEffect(() => {
     async function getItems() {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/items`,
-          { cache: "no-store" }
-        );
-        if (!res.ok) throw new Error("Failed to fetch items");
-
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/items`, { cache: "no-store" });
         const data = await res.json();
         setItems(data);
         setFilteredItems(data);
@@ -79,273 +39,143 @@ export default function DashboardPage() {
     getItems();
   }, []);
 
-  async function handleLogout() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      alert("Error logging out: " + error.message);
-      return;
-    }
-    router.push("/");
-  }
-  function resetFilters() {
-    setSearch("");
-    setLocationSearch("");
-    setFilteredItems(items);
-    setFilterCategory("");
-    setPriceFrom("");
-    setPriceTo("");
-  }
-
   function applyFilters() {
-    let filtered = [...items];
-    if (search) {
-      filtered = filtered.filter((i) =>
-        i.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-    if (locationSearch) {
-      filtered = filtered.filter((i) =>
-        i.location.toLowerCase().includes(locationSearch.toLowerCase())
-      );
-    }
-    if (filterCategory) {
-      filtered = filtered.filter((i) => i.category === filterCategory);
-    }
-    if (priceFrom) {
-      filtered = filtered.filter((i) => i.price >= Number(priceFrom));
-    }
-    if (priceTo) {
-      filtered = filtered.filter((i) => i.price <= Number(priceTo));
-    }
+    let filtered = items.filter(i => 
+      (!search || i.name?.toLowerCase().includes(search.toLowerCase())) &&
+      (!locationSearch || i.location?.toLowerCase().includes(locationSearch.toLowerCase())) &&
+      (!filterCategory || i.category === filterCategory) &&
+      (!priceFrom || i.price >= Number(priceFrom)) &&
+      (!priceTo || i.price <= Number(priceTo))
+    );
     setFilteredItems(filtered);
+    setShowFilters(false);
   }
 
-
-  if (loading)
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-slate-500 animate-pulse font-medium">
-          Loading items...
-        </p>
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-[#fff7f0]">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-[#f3a552] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-[#e25e2d] font-medium">Finding treasures...</p>
       </div>
-    );
-
-  
-  
+    </div>
+  );
 
   return (
-    <>
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fff7f0] text-slate-800">
+      {/* --- MODERN NAVBAR --- */}
+      <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-[#fae9d7] px-4 md:px-8 py-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between gap-4">
+            {/* Logo */}
+            <div 
+              className="font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer" 
+              onClick={() => router.push("/dashboard")}
+            >
+              OneHand<span className="text-[#f3a552]">.</span>
+            </div>
 
-      {/* ================= NAVBAR ================= */}
-      <nav className="bg-white shadow px-6 py-4">
-
-        {/* ===== TOP ROW ===== */}
-        <div className="flex items-center justify-between">
-          {/* LOGO + SEARCH */}
-          <div className="flex items-center gap-4 flex-1">
-            <div className="font-bold text-xl text-[#e25e2d]">OneHand</div>
-            <div className="relative flex-1 max-w-xl">
-              <Search
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+            {/* Search Bar - Expanded for Modern Look */}
+            <div className="hidden md:flex relative flex-1 max-w-2xl group">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#f3a552]" />
               <input
                 type="text"
-                placeholder="Search items..."
+                placeholder="Search for something special..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full border pl-11 pr-4 py-3 rounded-full text-sm"
+                className="w-full bg-[#fae9d7]/30 border-2 border-transparent focus:border-[#f8d5b8] focus:bg-white outline-none pl-12 pr-4 py-2.5 rounded-2xl transition-all"
               />
             </div>
-          </div>
 
-          {/* ICONS */}
-          <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Heart size={20} />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <User size={20} />
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1 px-3 py-2 text-sm rounded-full hover:bg-gray-100"
-            >
-              <LogOut size={16} /> Logout
-            </button>
-            <button
-              onClick={() => router.push("/donate")}
-              className="bg-[#e25e2d] text-white px-5 py-2 rounded-full hover:bg-[#ff7b50]"
-            >
-              + Donate
-            </button>
-          </div>
-        </div>
-
-        {/* ===== SECOND ROW: FILTERS & CATEGORIES ===== */}
-        <div className="flex items-center gap-6 mt-4 text-sm justify-start">
-          {/* ALL CATEGORIES */}
-          <button
-            onClick={() => setShowCategories(!showCategories)}
-            className="font-medium hover:text-[#e25e2d]"
-          >
-            All Categories
-          </button>
-
-          {/* LOCATION */}
-          <div className="relative w-56">
-            <MapPin
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-            <input
-              type="text"
-              placeholder="Location"
-              value={locationSearch}
-              onChange={(e) => setLocationSearch(e.target.value)}
-              className="w-full border pl-9 pr-3 py-1.5 rounded-full text-sm"
-              onFocus={() => setLocationOpen(true)}
-              onBlur={() => setTimeout(() => setLocationOpen(false), 100)}
-            />
-
-            {locationOpen && locationSearch && (
-              <div className="absolute top-10 left-0 right-0 bg-white border shadow rounded-md z-10">
-                {locations
-                  .filter((loc) =>
-                    loc.toLowerCase().includes(locationSearch.toLowerCase())
-                  )
-                  .map((loc) => (
-                    <button
-                      key={loc}
-                      onClick={() => setLocationSearch(loc)}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                    >
-                      {loc}
-                    </button>
-                  ))}
-              </div>
-            )}
-          </div>
-
-          {/* FILTER */}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-1 hover:text-[#e25e2d]"
-          >
-            <SlidersHorizontal size={16} /> Filter
-          </button>
-
-          {/* RESET */}
-          <button
-            onClick={resetFilters}
-            className="text-gray-500 hover:text-red-500"
-          >
-            Reset
-          </button>
-        </div>
-
-        {/* ===== FILTER FORM ===== */}
-        {showFilters && (
-          <div className="bg-white border shadow px-6 py-4 mt-2 w-full md:w-[500px] rounded">
-            <h4 className="font-semibold mb-2">Filter Items</h4>
-            <div className="flex flex-col gap-2">
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-                className="border px-3 py-2 rounded"
-              >
-                <option value="">Select Category</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  placeholder="Price from"
-                  value={priceFrom}
-                  onChange={(e) => setPriceFrom(e.target.value)}
-                  className="border px-3 py-2 rounded flex-1"
-                />
-                <input
-                  type="number"
-                  placeholder="Price to"
-                  value={priceTo}
-                  onChange={(e) => setPriceTo(e.target.value)}
-                  className="border px-3 py-2 rounded flex-1"
-                />
-              </div>
+            {/* Actions */}
+            <div className="flex items-center gap-3">
+              <button onClick={() => router.push("/bookmarks")} className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]">
+                <Heart size={22} />
+              </button>
+              <button className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]">
+                <User size={22} />
+              </button>
               <button
-                onClick={applyFilters}
-                className="bg-[#e25e2d] text-white px-4 py-2 rounded hover:bg-[#ff7b50]"
+                onClick={() => router.push("/donate")}
+                className="hidden sm:block bg-[#e25e2d] hover:bg-[#d14d1c] text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all"
               >
-                Apply Filters
+                + Donate Item
               </button>
             </div>
           </div>
-        )}
+
+          {/* Sub-Nav: Filters & Secondary Controls */}
+          <div className="flex items-center gap-4 mt-4 overflow-x-auto pb-1 no-scrollbar">
+            <button 
+              onClick={() => setShowCategories(!showCategories)}
+              className="flex items-center gap-2 px-4 py-1.5 bg-white border border-[#fae9d7] rounded-full text-sm font-semibold whitespace-nowrap hover:border-[#f3a552]"
+            >
+              Categories <ChevronDown size={14} />
+            </button>
+
+            <div className="h-4 w-[1px] bg-slate-200"></div>
+
+            <div className="relative">
+               <div className="flex items-center gap-2 px-4 py-1.5 bg-white border border-[#fae9d7] rounded-full text-sm">
+                  <MapPin size={14} className="text-[#f3a552]" />
+                  <input 
+                    placeholder="Location..." 
+                    className="outline-none w-24"
+                    value={locationSearch}
+                    onChange={(e) => setLocationSearch(e.target.value)}
+                  />
+               </div>
+            </div>
+
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-1.5 bg-white border border-[#fae9d7] rounded-full text-sm font-semibold text-slate-600"
+            >
+              <SlidersHorizontal size={14} /> Filters
+            </button>
+          </div>
+        </div>
       </nav>
 
-      {/* ================= CATEGORIES MENU ================= */}
+      {/* --- CATEGORY MEGA MENU --- */}
       {showCategories && (
-        <div className="bg-white border shadow px-6 py-6 mt-2">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm">
-            {[
-              { name: "Clothes", subs: ["Men", "Women", "Kids"] },
-              { name: "Furniture", subs: ["Beds", "Tables", "Chairs"] },
-              { name: "Electronics", subs: ["Phones", "Laptops", "Accessories"] },
-              { name: "Toys", subs: ["Educational", "Outdoor"] },
-              { name: "Books", subs: ["School", "Novels", "Children"] },
-            ].map((cat) => (
-              <div key={cat.name}>
-                <h4 className="font-semibold mb-2">{cat.name}</h4>
-                {cat.subs.map((sub) => (
-                  <button key={sub} className="block hover:text-[#e25e2d]">
-                    {sub}
-                  </button>
-                ))}
+        <div className="absolute left-0 right-0 z-30 bg-white border-b border-[#fae9d7] shadow-xl animate-in slide-in-from-top-2">
+          <div className="max-w-7xl mx-auto p-8 grid grid-cols-2 md:grid-cols-5 gap-8">
+            {/* Category columns like you had before, but styled cleaner */}
+            {categories.map(cat => (
+              <div key={cat} className="group cursor-pointer">
+                <h4 className="font-bold text-[#e25e2d] mb-2">{cat}</h4>
+                <div className="space-y-1 text-sm text-slate-500">
+                  <p className="hover:text-[#f3a552]">New Arrivals</p>
+                  <p className="hover:text-[#f3a552]">Popular Items</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* ================= ITEMS ================= */}
-      <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* --- MAIN CONTENT --- */}
+      <main className="max-w-7xl mx-auto p-6 md:p-8">
+        <header className="mb-8">
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+            Discover <span className="text-[#e25e2d]">Nearby</span> Treasures
+          </h1>
+          <p className="text-slate-500">Every item has a story, find yours today.</p>
+        </header>
+
         {filteredItems.length > 0 ? (
-          filteredItems.map((item) => <ItemCard key={item.id} item={item} />)
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredItems.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
         ) : (
-          <p>No items found.</p>
-        )}
-      </div>
-
-    </div>
-  <div className="max-w-7xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex gap-4">
-          <a
-            href="/bookmarks"
-            className="px-4 py-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
-          >
-            Saved Items
-          </a>
-        </div>
-      </div>
-      
-
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-        {items.length > 0 ? (
-          items.map((item) => <ItemCard key={item.id} item={item} />)
-        ) : (
-          <div className="col-span-full py-20 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-            <p className="text-slate-400">No items found in the database.</p>
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border-2 border-dashed border-[#f8d5b8]">
+            <p className="text-[#f3a552] font-medium">No items found in this area.</p>
+            <button onClick={() => {setSearch(""); setLocationSearch(""); setFilteredItems(items);}} className="mt-4 text-[#e25e2d] underline">Clear all filters</button>
           </div>
         )}
-      </div> */}
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
