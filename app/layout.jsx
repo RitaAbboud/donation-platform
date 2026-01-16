@@ -1,11 +1,11 @@
-import { Inter } from "next/font/google";
+import {  Poppins } from "next/font/google";
 import "./globals.css";
 
 
-const inter = Inter({ 
+const inter = Poppins({ 
   subsets: ["latin"],
-  weight: "300", 
-  variable: "--font-inter", 
+  weight: "200", 
+  variable: "--font-poppins", 
 });
 
 export const metadata = {
@@ -16,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased text-[#222222] bg-[#fae9d7]`}>
+      <body className={`${inter.className} antialiased text-[#222222] `}>
         <main>{children}</main>
       </body>
     </html>

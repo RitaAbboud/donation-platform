@@ -4,13 +4,25 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import ItemCard from "../../components/dashboardPage/itemCard";
 import { useEffect, useState } from "react";
-<<<<<<< Updated upstream
+import { Heart, User, MapPin, SlidersHorizontal, Search, LogOut } from "lucide-react";
+
 
 export default function DashboardPage() {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [search, setSearch] = useState("");
+  const [locationSearch, setLocationSearch] = useState("");
+  const [showCategories, setShowCategories] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
+  const [filterCategory, setFilterCategory] = useState("");
+  const [priceFrom, setPriceFrom] = useState("");
+  const [priceTo, setPriceTo] = useState("");
 
+  const locations = ["Beirut", "Tripoli", "Saida", "Jbeil", "Zahle"];
+  const categories = ["Clothes", "Furniture", "Electronics", "Toys", "Books"];
   // Function to fetch items 
   async function getItems() {
     try {
@@ -44,28 +56,7 @@ export default function DashboardPage() {
     }
   }
 
-  useEffect(() => {
-=======
-import { Heart, User, MapPin, SlidersHorizontal, Search, LogOut } from "lucide-react";
 
-export default function DashboardPage() {
-  const router = useRouter();
-
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const [filteredItems, setFilteredItems] = useState([]);
-  const [search, setSearch] = useState("");
-  const [locationSearch, setLocationSearch] = useState("");
-  const [showCategories, setShowCategories] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [locationOpen, setLocationOpen] = useState(false);
-  const [filterCategory, setFilterCategory] = useState("");
-  const [priceFrom, setPriceFrom] = useState("");
-  const [priceTo, setPriceTo] = useState("");
-
-  const locations = ["Beirut", "Tripoli", "Saida", "Jbeil", "Zahle"];
-  const categories = ["Clothes", "Furniture", "Electronics", "Toys", "Books"];
 
   useEffect(() => {
     async function getItems() {
@@ -85,7 +76,6 @@ export default function DashboardPage() {
         setLoading(false);
       }
     }
->>>>>>> Stashed changes
     getItems();
   }, []);
 
@@ -97,49 +87,6 @@ export default function DashboardPage() {
     }
     router.push("/");
   }
-
-<<<<<<< Updated upstream
-  if (loading)
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-slate-500 animate-pulse font-medium">
-          Loading items...
-        </p>
-      </div>
-    );
-
-  return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-          Marketplace
-        </h1>
-        <div className="flex gap-4">
-          <a
-            href="/bookmarks"
-            className="px-4 py-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
-          >
-            Saved Items
-          </a>
-          <button
-            onClick={handleLogoutButton}
-            className="px-4 py-2 bg-red-50 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-        {items.length > 0 ? (
-          items.map((item) => <ItemCard key={item.id} item={item} />)
-        ) : (
-          <div className="col-span-full py-20 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-            <p className="text-slate-400">No items found in the database.</p>
-          </div>
-        )}
-      </div>
-=======
   function resetFilters() {
     setSearch("");
     setLocationSearch("");
@@ -173,9 +120,21 @@ export default function DashboardPage() {
     setFilteredItems(filtered);
   }
 
-  if (loading) return <p className="p-6">Loading items...</p>;
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-slate-500 animate-pulse font-medium">
+          Loading items...
+        </p>
+      </div>
+    );
+
+  
+  
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50">
 
       {/* ================= NAVBAR ================= */}
@@ -362,7 +321,31 @@ export default function DashboardPage() {
           <p>No items found.</p>
         )}
       </div>
->>>>>>> Stashed changes
+
     </div>
+  <div className="max-w-7xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex gap-4">
+          <a
+            href="/bookmarks"
+            className="px-4 py-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
+          >
+            Saved Items
+          </a>
+        </div>
+      </div>
+      
+
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        {items.length > 0 ? (
+          items.map((item) => <ItemCard key={item.id} item={item} />)
+        ) : (
+          <div className="col-span-full py-20 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+            <p className="text-slate-400">No items found in the database.</p>
+          </div>
+        )}
+      </div> */}
+      </div>
+    </>
   );
 }
