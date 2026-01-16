@@ -20,22 +20,23 @@ export default function NavBar() {
       className={`w-full z-50 fixed top-0 transition-all duration-300
         ${scrolled
           ? "backdrop-blur-md bg-black/20 shadow-sm"
-          : "bg-transparent"
+          : "bg-black/20 backdrop-blur-md"
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-3 md:py-4 flex justify-between items-center">
-
-        {/* Logo */}
-        <h1 className="text-xl md:text-2xl font-bold text-[#e25e2d]">
-          One Hand
-        </h1>
+        {/* Logo + Text */}
+        <Link href="/" className="flex items-center gap-2">
+          <h1 className="text-xl md:text-2xl font-bold text-[#e25e2d]">
+            One Hand
+          </h1>
+        </Link>
 
         {/* Links + Button */}
-        <div className="flex items-center gap-4 md:gap-6 font-medium text-black">
+        <div className="flex items-center gap-4 md:gap-6 font-medium text-gray-900">
           <div className="flex gap-6 md:gap-8 text-sm md:text-base">
             <NavLink href="#">Home</NavLink>
             <NavLink href="#features">Features</NavLink>
-            <NavLink href="#mission">Our Mission</NavLink>
+            <NavLink href="#mission">Mission</NavLink>
             <NavLink href="#info">Info</NavLink>
           </div>
 
@@ -48,7 +49,6 @@ export default function NavBar() {
             Login / Sign Up
           </Link>
         </div>
-
       </div>
     </div>
   );

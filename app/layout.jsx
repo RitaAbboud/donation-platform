@@ -4,8 +4,8 @@ import "./globals.css";
 
 const inter = Inter({ 
   subsets: ["latin"],
-  weight: "300", // This sets the light weight
-  variable: "--font-inter", // Optional: used for CSS variables
+  weight: "300", 
+  variable: "--font-inter", 
 });
 
 export const metadata = {

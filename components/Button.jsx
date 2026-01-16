@@ -2,7 +2,7 @@
 
 export default function Button({ children, type = "primary" }) {
   const base =
-    "px-6 py-3 rounded-xl font-semibold transition transform hover:-translate-y-1";
+    "px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:-translate-y-1";
 
   const styles =
     type === "primary"
