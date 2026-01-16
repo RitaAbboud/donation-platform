@@ -13,6 +13,10 @@ const nextConfig = {
             },
         ],
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 851450ad40a429743f7666ca486bab7498eb8e46
 };
 
 export default nextConfig;
