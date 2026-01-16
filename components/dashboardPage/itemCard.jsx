@@ -212,7 +212,7 @@ export default function ItemCard({ item }) {
                 className={`w-full py-4 rounded-2xl font-bold text-lg transition-all transform active:scale-95 shadow-lg ${
                   issold
                     ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 border-2 border-transparent hover:border-red-200"
-                    : "bg-green-600 text-white hover:bg-green-700 hover:shadow-green-200"
+                    : "bg-[#e25e2d] text-white hover:bg-green-700 hover:shadow-green-200"
                 }`}
               >
                 {issold ? "Release Reservation" : "Reserve This Item"}
