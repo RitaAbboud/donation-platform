@@ -6,8 +6,6 @@ import ItemCard from "../../components/dashboardPage/itemCard";
 import { useEffect, useState, useMemo } from "react";
 import {
   Heart,
-  User,
-  MapPin,
   SlidersHorizontal,
   Search,
   LogOut,
@@ -21,6 +19,24 @@ const poppins = Poppins({
   weight: ["400", "600", "700"],
 });
 
+// Map of category IDs to names
+const categoriesMap = {
+  "697ab681-4fb9-4ee1-adc4-3d8f7d6cdff3": "Clothes",
+  "ff364af8-e19e-4e6c-93c7-ca627e40c7f0": "Furniture",
+  "0f6bc521-2bf5-4c94-a58d-357d502cb8c6": "Electronics",
+  "91935055-4ea0-49d8-a51c-8dedde58fc0c": "Toys",
+  "9a4ea99e-c275-44d8-96d0-4be94569d2f2": "Books",
+};
+
+// Max prices per category
+const categoryMaxPrices = {
+  Clothes: 10,
+  Furniture: 100,
+  Electronics: 50,
+  Toys: 15,
+  Books: 5,
+};
+
 export default function DashboardPage() {
   const router = useRouter();
 
@@ -30,7 +46,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("");
+  const [activeCategoryId, setActiveCategoryId] = useState("");
+  const [activeCategory, setActiveCategory] = useState(""); // optional for name highlighting
   const [filterCategory, setFilterCategory] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [priceFrom, setPriceFrom] = useState("");
@@ -46,36 +63,103 @@ export default function DashboardPage() {
 
   const categories = useMemo(
     () => [
-      { name: "Clothes", image: "/images/clothes.jpg" },
-      { name: "Furniture", image: "/images/furniture.jpg" },
-      { name: "Electronics", image: "/images/electronics.jpg" },
-      { name: "Toys", image: "/images/toys.jpg" },
-      { name: "Books", image: "/images/books.jpg" },
+      {
+        id: "697ab681-4fb9-4ee1-adc4-3d8f7d6cdff3",
+        name: "Clothes",
+        image: "/images/clothes.jpg",
+      },
+      {
+        id: "ff364af8-e19e-4e6c-93c7-ca627e40c7f0",
+        name: "Furniture",
+        image: "/images/furniture.jpg",
+      },
+      {
+        id: "0f6bc521-2bf5-4c94-a58d-357d502cb8c6",
+        name: "Electronics",
+        image: "/images/electronics.jpg",
+      },
+      {
+        id: "91935055-4ea0-49d8-a51c-8dedde58fc0c",
+        name: "Toys",
+        image: "/images/toys.jpg",
+      },
+      {
+        id: "9a4ea99e-c275-44d8-96d0-4be94569d2f2",
+        name: "Books",
+        image: "/images/books.jpg",
+      },
     ],
     []
   );
 
-  const categoryMaxPrices = {
-    Clothes: 100,
-    Furniture: 500,
-    Electronics: 1000,
-    Toys: 50,
-    Books: 30,
-  };
+  /* ================= FILTER FUNCTION ================= */
+  function filterItems() {
+    let filtered = [...items];
+
+    if (search) {
+      const q = search.toLowerCase();
+      filtered = filtered.filter((i) =>
+        JSON.stringify(i).toLowerCase().includes(q)
+      );
+    }
+
+    // Filter by activeCategoryId first (icon), fallback to dropdown name
+    if (activeCategoryId) {
+      filtered = filtered.filter((i) => i.category_id === activeCategoryId);
+    } else if (filterCategory) {
+      const catEntry = Object.entries(categoriesMap).find(
+        ([id, name]) => name === filterCategory
+      );
+      if (catEntry) {
+        const id = catEntry[0];
+        filtered = filtered.filter((i) => i.category_id === id);
+      }
+    }
+
+    if (locationSearch) {
+      filtered = filtered.filter((i) =>
+        i.location?.toLowerCase().includes(locationSearch.toLowerCase())
+      );
+    }
+
+    if (priceFrom) {
+      filtered = filtered.filter((i) => i.price >= Number(priceFrom));
+    }
+
+    if (priceTo) {
+      // Determine max price for the category if selected
+      let categoryName = filterCategory;
+      if (!categoryName && activeCategoryId) {
+        categoryName = categoriesMap[activeCategoryId];
+      }
+      const maxPrice = categoryName ? categoryMaxPrices[categoryName] : Infinity;
+
+      filtered = filtered.filter(
+        (i) => i.price <= Math.min(Number(priceTo), maxPrice)
+      );
+    }
+
+    return filtered;
+  }
 
   /* ================= DATA FETCHING ================= */
   useEffect(() => {
     async function getItems() {
       try {
         const res = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-          }/api/items`,
+          `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/items`,
           { cache: "no-store" }
         );
         const data = await res.json();
-        setItems(data);
-        setFilteredItems(data);
+
+        // Add category names to items
+        const dataWithCategoryName = data.map((item) => ({
+          ...item,
+          category: categoriesMap[item.category_id],
+        }));
+
+        setItems(dataWithCategoryName);
+        setFilteredItems(dataWithCategoryName);
       } catch (err) {
         console.error("Fetch error:", err);
       } finally {
@@ -85,65 +169,21 @@ export default function DashboardPage() {
     getItems();
   }, []);
 
-  /* ================= FILTER LOGIC ================= */
-  // Handles the search bar and the round category icons
+  /* ================= AUTO FILTER ================= */
   useEffect(() => {
-    let filtered = [...items];
-
-    if (search) {
-      filtered = filtered.filter((i) =>
-        i.name?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (activeCategory) {
-      filtered = filtered.filter((i) => i.category === activeCategory);
-    }
-
-    setFilteredItems(filtered);
-  }, [search, activeCategory, items]);
-
-  // Handles the Modal filters
-  function applyFilters() {
-    let filtered = [...items];
-
-    if (search)
-      filtered = filtered.filter((i) =>
-        i.name?.toLowerCase().includes(search.toLowerCase())
-      );
-
-    if (filterCategory)
-      filtered = filtered.filter((i) => i.category === filterCategory);
-
-    if (locationSearch)
-      filtered = filtered.filter((i) =>
-        i.location?.toLowerCase().includes(locationSearch.toLowerCase())
-      );
-
-    if (priceFrom)
-      filtered = filtered.filter((i) => i.price >= Number(priceFrom));
-
-    if (priceTo) {
-      const maxPrice = filterCategory
-        ? categoryMaxPrices[filterCategory]
-        : Infinity;
-      const priceLimit = Math.min(Number(priceTo), maxPrice);
-      filtered = filtered.filter((i) => i.price <= priceLimit);
-    }
-
-    setFilteredItems(filtered);
-    setShowFilters(false);
-  }
+    setFilteredItems(filterItems());
+  }, [search, activeCategoryId, filterCategory, locationSearch, priceFrom, priceTo, items]);
 
   /* ================= ACTIONS ================= */
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/");
+  function applyFilters() {
+    setFilteredItems(filterItems());
+    setShowFilters(false);
   }
 
   function resetFilters() {
     setSearch("");
     setActiveCategory("");
+    setActiveCategoryId("");
     setFilterCategory("");
     setLocationSearch("");
     setPriceFrom("");
@@ -152,6 +192,12 @@ export default function DashboardPage() {
     setShowFilters(false);
   }
 
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.push("/");
+  }
+
+  /* ================= LOADING ================= */
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#fff7f0]">
@@ -162,9 +208,9 @@ export default function DashboardPage() {
       </div>
     );
 
-return (
+  /* ================= UI ================= */
+  return (
     <div className={`min-h-screen bg-[#fff6ef] text-slate-800 ${poppins.className}`}>
-      
       {/* ================= 1. NAVBAR ================= */}
       <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-[#fae9d7] px-4 md:px-8 py-4">
         <div className="max-w-7xl mx-auto">
@@ -230,9 +276,9 @@ return (
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 px-4 py-1.5 border rounded-full font-semibold transition-all ${
-                showFilters 
-                ? "bg-[#e25e2d] border-[#e25e2d] text-white" 
-                : "bg-white border-[#fae9d7] text-slate-600"
+                showFilters
+                  ? "bg-[#e25e2d] border-[#e25e2d] text-white"
+                  : "bg-white border-[#fae9d7] text-slate-600"
               }`}
             >
               <SlidersHorizontal size={14} /> Filters
@@ -268,7 +314,9 @@ return (
               >
                 <option value="">All Categories</option>
                 {categories.map((c) => (
-                  <option key={c.name} value={c.name}>{c.name}</option>
+                  <option key={c.name} value={c.name}>
+                    {c.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -285,7 +333,9 @@ return (
               >
                 <option value="">All Locations</option>
                 {locations.map((loc) => (
-                  <option key={loc} value={loc}>{loc}</option>
+                  <option key={loc} value={loc}>
+                    {loc}
+                  </option>
                 ))}
               </select>
             </div>
@@ -296,36 +346,51 @@ return (
                 Price Range
               </label>
               <div className="flex gap-2">
+                {/* Min Price */}
                 <input
                   type="number"
                   placeholder="Min"
                   value={priceFrom}
                   onChange={(e) => setPriceFrom(e.target.value)}
                   className="w-1/2 rounded-2xl border border-[#fae9d7] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none"
+                  min={0}
+                  max={filterCategory ? categoryMaxPrices[filterCategory] : undefined}
                 />
+
+                {/* Max Price */}
                 <input
                   type="number"
                   placeholder="Max"
                   value={priceTo}
-                  onChange={(e) => setPriceTo(e.target.value)}
+                  onChange={(e) => {
+                    let categoryName = filterCategory;
+                    if (!categoryName && activeCategoryId) {
+                      categoryName = categoriesMap[activeCategoryId];
+                    }
+                    const maxPrice = categoryName ? categoryMaxPrices[categoryName] : Infinity;
+                    const value = Number(e.target.value);
+                    setPriceTo(value > maxPrice ? maxPrice : value);
+                  }}
                   className="w-1/2 rounded-2xl border border-[#fae9d7] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none"
+                  min={0}
+                  max={filterCategory ? categoryMaxPrices[filterCategory] : undefined}
                 />
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2 w-full md:w-auto">
+            <div className="flex gap-2 w-full md:w-auto -mt-2">
               <button
                 onClick={applyFilters}
-                className="flex-1 md:flex-none bg-[#e25e2d] text-white px-8 py-3 rounded-2xl font-bold hover:bg-[#d14d1c] transition-all active:scale-95 shadow-lg shadow-orange-100"
+                className="flex-1 md:flex-none bg-[#e25e2d] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#d14d1c] transition-all active:scale-95 shadow-md shadow-orange-100 -translate-y-1"
               >
                 Apply
               </button>
               <button
                 onClick={() => setShowFilters(false)}
-                className="p-3 rounded-2xl border border-[#fae9d7] text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all"
+                className="p-2 rounded-xl border border-[#fae9d7] text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all -translate-y-1"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
           </div>
@@ -333,48 +398,70 @@ return (
       </div>
 
       {/* ================= 3. CATEGORY ICONS ================= */}
-      <div className="bg-white py-6 flex justify-center gap-8 shadow-sm overflow-x-auto no-scrollbar">
-        {categories.map((cat) => (
-          <button
-            key={cat.name}
-            onClick={() => setActiveCategory(activeCategory === cat.name ? "" : cat.name)}
-            className="flex flex-col items-center gap-2 group min-w-[70px]"
-          >
-            <div
-              className={`w-16 h-16 rounded-full overflow-hidden border-4 transition-all duration-300 ${
-                activeCategory === cat.name
-                  ? "border-[#e25e2d] scale-110 shadow-lg shadow-orange-100"
-                  : "border-transparent group-hover:border-[#fae9d7]"
-              }`}
-            >
-              <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-            </div>
-            <span className={`text-xs font-bold ${activeCategory === cat.name ? "text-[#e25e2d]" : "text-slate-500"}`}>
-              {cat.name}
-            </span>
-          </button>
-        ))}
-      </div>
+      <div className="bg-white py-8 flex justify-center gap-16 shadow-sm overflow-x-auto no-scrollbar">
+  {categories.map((cat) => {
+    const isActive = activeCategoryId === cat.id;
+
+    return (
+      <button
+        key={cat.id}
+        onClick={() => {
+          setActiveCategoryId(isActive ? "" : cat.id);
+          setFilterCategory("");
+          if (!isActive) {
+            setPriceTo((prev) => {
+              const maxPrice = categoryMaxPrices[cat.name];
+              return prev && prev > maxPrice ? maxPrice : prev;
+            });
+          }
+        }}
+        className="flex flex-col items-center gap-3 group min-w-[100px] transition-transform duration-300"
+      >
+        <div
+          className={`w-22 h-22 rounded-full overflow-hidden border-4 transition-all duration-300 ${
+            isActive
+              ? "border-[#e25e2d] scale-115 shadow-lg shadow-orange-100"
+              : "border-transparent group-hover:border-[#fae9d7] scale-100"
+          }`}
+        >
+          <img
+            src={cat.image}
+            alt={cat.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <span
+          className={`text-sm font-bold transition-colors ${
+            isActive
+              ? "text-[#e25e2d]"
+              : "text-slate-500 group-hover:text-[#e25e2d]"
+          }`}
+        >
+          {cat.name}
+        </span>
+      </button>
+    );
+  })}
+</div>
+
 
       {/* ================= 4. MAIN CONTENT ================= */}
       <main className="max-w-7xl mx-auto p-6 md:p-8">
-        <header className="mb-8">
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
-            Discover <span className="text-[#e25e2d]">Nearby</span> Treasures
-          </h1>
-          <p className="text-slate-500">Hand-picked items shared with love.</p>
-        </header>
-
+        
         {filteredItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))}
-          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-14">
+  {filteredItems.map((item) => (
+    <ItemCard key={item.id} item={item} />
+  ))}
+</div>
+
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-[#f8d5b8]">
+         <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-[#f8d5b8]">
             <p className="text-[#f3a552] font-medium">No items found.</p>
-            <button onClick={resetFilters} className="mt-4 text-[#e25e2d] underline font-bold">
+            <button
+              onClick={resetFilters}
+              className="mt-4 text-[#e25e2d] underline font-bold"
+            >
               Show all items
             </button>
           </div>

@@ -27,7 +27,7 @@ export default function SignupDialog() {
     }
     setLoading(false);
     setMsg("success");
-    setTimeout(() => router.push("/"), 1500);
+    setTimeout(() => router.push("/dashboard"), 1500);
   }
 
   return (
