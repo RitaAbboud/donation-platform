@@ -203,7 +203,7 @@ return (
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
               >
                 <LogOut size={18} />
                 <span className="hidden sm:inline">Logout</span>
@@ -254,7 +254,7 @@ return (
           showFilters ? "max-h-[500px] opacity-100 py-8" : "max-h-0 opacity-0 py-0"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
           <div className="flex flex-col md:flex-row items-end gap-6">
             {/* Category Select */}
             <div className="flex-1 w-full space-y-2">
@@ -264,7 +264,7 @@ return (
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
+                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fae9d7]/30 px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
               >
                 <option value="">All Categories</option>
                 {categories.map((c) => (
@@ -281,7 +281,7 @@ return (
               <select
                 value={locationSearch}
                 onChange={(e) => setLocationSearch(e.target.value)}
-                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
+                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fae9d7]/30 px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
               >
                 <option value="">All Locations</option>
                 {locations.map((loc) => (

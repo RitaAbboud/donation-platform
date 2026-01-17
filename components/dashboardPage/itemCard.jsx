@@ -236,7 +236,7 @@ return (
                     className={`w-full py-4 rounded-lg font-bold text-sm uppercase tracking-widest transition-all ${
                       issold
                         ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                        : "bg-slate-900 text-white hover:bg-[#e25e2d] shadow-lg hover:shadow-[#e25e2d]/20"
+                        : "bg-[#e25e2d] text-white hover:bg-[#d14d1c] shadow-lg hover:shadow-[#e25e2d]/20"
                     }`}
                   >
                     {issold ? "Item Reserved" : "Reserve Item"}

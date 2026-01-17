@@ -25,11 +25,12 @@ export default function NavBar() {
     >
       <div className="max-w-7xl mx-auto px-6 py-3 md:py-4 flex justify-between items-center">
         {/* Logo + Text */}
-        <Link href="/" className="flex items-center gap-2">
-          <h1 className="text-xl md:text-2xl font-bold text-[#e25e2d]">
-            One Hand
-          </h1>
-        </Link>
+         <div
+              className="font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer"
+              onClick={() => router.push("/")}
+            >
+              OneHand<span className="text-[#f3a552]">.</span>
+            </div>
 
         {/* Links + Button */}
         <div className="flex items-center gap-4 md:gap-6 font-medium text-gray-900">

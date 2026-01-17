@@ -46,8 +46,16 @@ export default function BookmarksPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8 text-slate-800">My Bookmarks</h1>
+    <div className={`min-h-screen bg-[#fff6ef] text-slate-900 `}>
+
+    <div className="max-w-7xl mx-auto p-6" >
+       <button 
+            onClick={() => router.back()}
+            className="flex items-center gap-2 mb-10 text-slate-400 hover:text-[#e25e2d] transition-colors text-sm font-bold uppercase tracking-widest"
+          >
+            ← Back to Shop
+          </button>
+      <h1 className="text-3xl font-bold mb-9 text-slate-800">My Bookmarks</h1>
 
       {bookmarks.length === 0 ? (
         <p className="text-slate-500">You haven't bookmarked any items yet.</p>
@@ -66,5 +74,6 @@ export default function BookmarksPage() {
         </div>
       )}
     </div>
+    </div>  
   );
 }

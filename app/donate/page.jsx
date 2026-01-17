@@ -81,12 +81,12 @@ export default function DonatePage() {
 
   setLoading(true);
   try {
-    // 1️⃣ Get current user correctly
+    // 1️ Get current user correctly
     const { data, error: userError } = await supabase.auth.getUser();
     if (userError || !data.user) throw new Error("You must be logged in");
     const user = data.user;
 
-    // 2️⃣ Upload image if exists
+    // 2️ Upload image if exists
     let image_url = null;
     if (form.image) {
       const ext = form.image.name.split(".").pop();
@@ -101,7 +101,7 @@ export default function DonatePage() {
       image_url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/donations/${path}`;
     }
 
-    // 3️⃣ Insert item
+    // 3️ Insert item
     const { error: insertError } = await supabase.from("items").insert({
       owner_id: user.id,
       category_id: form.category_id,
@@ -129,7 +129,7 @@ export default function DonatePage() {
 
 
  return (
-  <div className={`min-h-screen bg-[#fffcf9] text-slate-900 ${poppins.className}`}>
+  <div className={`min-h-screen bg-[#fff6ef] text-slate-900 ${poppins.className}`}>
     
     {/* ===== BACKGROUND DECORATION (Subtle) ===== */}
     <div className="absolute top-0 right-0 w-1/3 h-full bg-[#fae9d7]/20 z-0 hidden lg:block" />
@@ -154,14 +154,14 @@ export default function DonatePage() {
             Join our community of mindful sharing.
           </p>
           
-          <div className="p-6 bg-[#e25e2d]/5 rounded-2xl border border-[#e25e2d]/10">
+          {/* <div className="p-6 bg-[#e25e2d]/5 rounded-2xl border border-[#e25e2d]/10">
             <h4 className="font-bold text-[#e25e2d] mb-2">Why donate?</h4>
             <ul className="text-sm text-slate-600 space-y-3">
               <li className="flex gap-2">✨ Reduce waste in your city</li>
               <li className="flex gap-2">🤝 Support neighbors in need</li>
               <li className="flex gap-2">🧹 Declutter your space with love</li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* RIGHT SIDE: THE FORM */}
@@ -178,7 +178,7 @@ export default function DonatePage() {
                 value={form.category_id}
                 onChange={handleChange}
                 required
-                className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
+                className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
               >
                 <option value="">Select a category</option>
                 {categories.map((c) => (
@@ -199,7 +199,7 @@ export default function DonatePage() {
                 onChange={handleChange}
                 placeholder={fixedPrice ? `Max ${fixedPrice}` : "0.00"}
                 required
-                className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+                className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
               />
             </div>
 
@@ -214,7 +214,7 @@ export default function DonatePage() {
                 onChange={handleChange}
                 placeholder="e.g: Winter jacket, size M, gently used"
                 required
-                className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+                className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
               />
             </div>
 
@@ -233,7 +233,7 @@ export default function DonatePage() {
                   }}
                   placeholder="Select city"
                   required
-                  className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] pl-10 pr-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+                  className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] pl-10 pr-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
                 />
               </div>
               {locationOpen && (
@@ -267,7 +267,7 @@ export default function DonatePage() {
                   onChange={handleChange}
                   placeholder="71 234 567"
                   required
-                  className="w-full rounded-xl border border-[#fae9d7] bg-[#fffcf9] pl-10 pr-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+                  className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] pl-10 pr-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
                 />
               </div>
             </div>
@@ -277,7 +277,7 @@ export default function DonatePage() {
               <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
                 Item Photo
               </label>
-              <label className="group relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#fae9d7] p-8 cursor-pointer bg-[#fffcf9] hover:bg-white hover:border-[#e25e2d] transition-all">
+              <label className="group relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#fae9d7] p-8 cursor-pointer bg-[#fff6ef] hover:bg-white hover:border-[#e25e2d] transition-all">
                 <div className="flex flex-col items-center gap-2">
                   <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
                     <Upload size={24} className="text-[#e25e2d]" />
@@ -298,7 +298,7 @@ export default function DonatePage() {
               )}
               <button
                 disabled={loading}
-                className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-[#e25e2d] shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#e25e2d] text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-[#d14d1c] shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Processing..." : "Confirm Donation"}
               </button>
