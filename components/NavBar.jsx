@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Added this
+import { Heart } from "lucide-react";
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
+      setScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -16,52 +19,59 @@ export default function NavBar() {
   }, []);
 
   return (
-    <div
-      className={`w-full z-50 fixed top-0 transition-all duration-300
-        ${scrolled
-          ? "backdrop-blur-md bg-black/20 shadow-sm"
-          : "bg-black/20 backdrop-blur-md"
-        }`}
+    <nav
+      className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
+        scrolled
+          ? "py-3 bg-white/80 backdrop-blur-xl shadow-lg shadow-black/5"
+          : "py-5 bg-transparent"
+      }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-3 md:py-4 flex justify-between items-center">
-        {/* Logo + Text */}
-         <div
-              className="font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer"
-              onClick={() => router.push("/")}
-            >
-              OneHand<span className="text-[#f3a552]">.</span>
-            </div>
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        
+        {/* LOGO */}
+        <div
+          className="group flex items-center gap-1 font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <Heart className="group-hover:scale-110 transition-transform" fill="#e25e2d" size={24} />
+          <span>
+            OneHand<span className="text-[#f3a552]">.</span>
+          </span>
+        </div>
 
-        {/* Links + Button */}
-        <div className="flex items-center gap-4 md:gap-6 font-medium text-gray-900">
-          <div className="flex gap-6 md:gap-8 text-sm md:text-base">
-            <NavLink href="#">Home</NavLink>
-            <NavLink href="#features">Features</NavLink>
-            <NavLink href="#mission">Mission</NavLink>
-            <NavLink href="#info">Info</NavLink>
-          </div>
+        {/* NAVIGATION LINKS */}
+        <div className="hidden md:flex items-center gap-8 font-semibold text-slate-700">
+          <NavLink href="#hero">Home</NavLink>
+          <NavLink href="#features">Features</NavLink>
+          <NavLink href="#mission">Mission</NavLink>
+          <NavLink href="#info">Info</NavLink>
+        </div>
 
-          {/* Get Started button in navbar */}
+        {/* ACTIONS */}
+        <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="ml-2 md:ml-4 bg-[#e25e2d] text-white px-2.5 md:px-3 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-semibold
-                       hover:bg-[#ff7b50] transition-all duration-200 transform hover:-translate-y-1"
+            className="bg-[#e25e2d] text-white px-6 py-2.5 rounded-xl text-sm font-bold
+                       hover:bg-[#ff7b50] hover:shadow-[0_8px_20px_-6px_rgba(226,94,45,0.6)] 
+                       transition-all duration-300 active:scale-95"
           >
-            Login / Sign Up
+            Join Now
           </Link>
         </div>
       </div>
-    </div>
+    </nav>
   );
 }
 
 function NavLink({ href, children }) {
   return (
-    <a
+    <Link
       href={href}
-      className="transition-all duration-200 hover:-translate-y-1 hover:text-[#e25e2d]"
+      className="relative text-sm tracking-wide transition-colors hover:text-[#e25e2d] group"
     >
       {children}
-    </a>
+      {/* Animated Underline */}
+      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#e25e2d] transition-all duration-300 group-hover:w-full" />
+    </Link>
   );
 }

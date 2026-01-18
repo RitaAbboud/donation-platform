@@ -8,106 +8,130 @@ import {
   ShieldCheck,
   FileText,
   LifeBuoy,
+  Heart,
+  Instagram,
+  Twitter,
+  Facebook,
+  ArrowRight,
 } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer id="info" className="bg-[#FFF1E6] text-gray-800">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid gap-10 md:grid-cols-4">
+    <footer id="info" className="bg-[#3d332d] text-[#fdf2e9]/80">
+      <div className="max-w-7xl mx-auto px-6 pt-20 pb-10">
 
-          {/* BRAND */}
-          <div>
-            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gray-750">
-         
-              One Hand
-            </h3>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Helping people help each other with dignity, respect, and transparency.
+
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4 pb-16">
+          {/* BRAND COLUMN */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 font-black text-2xl tracking-tighter text-white">
+              <Heart fill="#e25e2d" className="text-[#e25e2d]" size={24} />
+              <span>
+                OneHand<span className="text-[#f3a552]">.</span>
+              </span>
+            </div>
+            <p className="leading-relaxed max-w-xs">
+              What you no longer need could mean everything to someone else.
+              Join us in giving with dignity.
             </p>
+            <div className="flex gap-4">
+              <SocialIcon icon={<Instagram size={18} />} />
+              <SocialIcon icon={<Twitter size={18} />} />
+              <SocialIcon icon={<Facebook size={18} />} />
+            </div>
           </div>
 
-          {/* PLATFORM */}
+          {/* QUICK LINKS */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-gray-750">
-              Platform
+            <h4 className="text-[#f3a552] font-bold mb-6 uppercase tracking-widest text-xs">
+              Quick Links
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li>
-                <Link href="#features" className="hover:text-[#e25e2d] transition-colors">
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link href="#mission" className="hover:text-[#e25e2d] transition-colors">
-                  Mission
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login"
-                  className="hover:text-[#e25e2d] transition-colors font-medium"
-                >
-                  Get Started
-                </Link>
-              </li>
+            <ul className="space-y-4">
+              <FooterLink href="#features">Features</FooterLink>
+              <FooterLink href="#mission">Our Mission</FooterLink>
+              <FooterLink href="/login">Join Community</FooterLink>
+              <FooterLink href="#">Success Stories</FooterLink>
             </ul>
           </div>
 
-          {/* RESOURCES */}
+          {/* LEGAL & SAFETY */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-gray-750">
-              Resources
+            <h4 className="text-[#f3a552] font-bold mb-6 uppercase tracking-widest text-xs">
+              Safety & Legal
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li className="flex items-center gap-2">
-                <ShieldCheck size={16} className="text-[#e25e2d]" />
-                <Link href="#" className="hover:text-[#e25e2d] transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li className="flex items-center gap-2">
-                <FileText size={16} className="text-[#e25e2d]" />
-                <Link href="#" className="hover:text-[#e25e2d] transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li className="flex items-center gap-2">
-                <LifeBuoy size={16} className="text-[#e25e2d]" />
-                <Link href="#" className="hover:text-[#e25e2d] transition-colors">
-                  Support
-                </Link>
-              </li>
+            <ul className="space-y-4">
+              <FooterLink href="#" icon={<ShieldCheck size={16} />}>
+                Privacy Policy
+              </FooterLink>
+              <FooterLink href="#" icon={<FileText size={16} />}>
+                Terms of Service
+              </FooterLink>
+              <FooterLink href="#" icon={<LifeBuoy size={16} />}>
+                Safety Guidelines
+              </FooterLink>
             </ul>
           </div>
 
-          {/* CONTACT */}
+          {/* CONTACT INFO */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-gray-750">
-              Contact
+            <h4 className="text-[#f3a552] font-bold mb-6 uppercase tracking-widest text-xs">
+              Contact Us
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li className="flex items-center gap-2">
-                <Mail size={16} className="text-[#e25e2d]" />
-                onehand.platform@gmail.com
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 hover:text-white transition-colors cursor-pointer group">
+                <Mail
+                  size={18}
+                  className="text-[#e25e2d] mt-0.5 group-hover:scale-110 transition-transform"
+                />
+                <span>onehand.platform@gmail.com</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone size={16} className="text-[#e25e2d]" />
-                +961 71 000 000
+              <li className="flex items-center gap-3">
+                <Phone size={18} className="text-[#e25e2d]" />
+                <span>+961 71 000 000</span>
               </li>
-              <li className="flex items-center gap-2">
-                <MapPin size={16} className="text-[#e25e2d]" />
-                Lebanon
+              <li className="flex items-center gap-3">
+                <MapPin size={18} className="text-[#e25e2d]" />
+                <span>Beirut, Lebanon</span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* DIVIDER */}
-        <div className="mt-12 border-t border-gray-300/40 pt-6 text-center text-sm text-gray-600">
-          © {new Date().getFullYear()} One Hand. All rights reserved.
+        {/* BOTTOM BAR */}
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] md:text-xs text-[#fdf2e9]/40 uppercase tracking-widest">
+          <p>
+            © {new Date().getFullYear()} One Hand Platform. Built with empathy.
+          </p>
+
         </div>
       </div>
     </footer>
+  );
+}
+
+// Helper component for Links
+function FooterLink({ href, children, icon }) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className="flex items-center gap-2 hover:text-white transition-all duration-300 transform hover:translate-x-1"
+      >
+        {icon && <span className="text-[#e25e2d]">{icon}</span>}
+        {children}
+      </Link>
+    </li>
+  );
+}
+
+// Helper component for Socials
+function SocialIcon({ icon }) {
+  return (
+    <Link
+      href="#"
+      className="w-9 h-9 rounded-xl bg-[#4d423b] flex items-center justify-center text-white/70 hover:bg-[#e25e2d] hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg"
+    >
+      {icon}
+    </Link>
   );
 }

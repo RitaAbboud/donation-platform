@@ -116,9 +116,9 @@ export default function LoginDialog() {
               <div className="text-sm p-3 rounded-lg bg-green-50 text-green-500 animate-in fade-in duration-300">
                 {msg}
               </div>
-            ) :  <div className="text-sm p-3 rounded-lg bg-red-50 text-red-500 animate-in fade-in duration-300">
+            ) :  msg != "" ? (<div className="text-sm p-3 rounded-lg bg-red-50 text-red-500 animate-in fade-in duration-300">
                 {msg}
-              </div> }
+              </div>) : null}
 
             <button 
               type="submit"

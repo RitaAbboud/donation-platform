@@ -74,10 +74,6 @@ export default function DonatePage() {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
-  if (fixedPrice !== null && Number(form.cost) > fixedPrice) {
-    setCostError(`Maximum allowed: ${fixedPrice}`);
-    return;
-  }
 
   setLoading(true);
   try {
@@ -154,14 +150,6 @@ export default function DonatePage() {
             Join our community of mindful sharing.
           </p>
           
-          {/* <div className="p-6 bg-[#e25e2d]/5 rounded-2xl border border-[#e25e2d]/10">
-            <h4 className="font-bold text-[#e25e2d] mb-2">Why donate?</h4>
-            <ul className="text-sm text-slate-600 space-y-3">
-              <li className="flex gap-2">✨ Reduce waste in your city</li>
-              <li className="flex gap-2">🤝 Support neighbors in need</li>
-              <li className="flex gap-2">🧹 Declutter your space with love</li>
-            </ul>
-          </div> */}
         </div>
 
         {/* RIGHT SIDE: THE FORM */}
@@ -196,6 +184,7 @@ export default function DonatePage() {
                 type="number"
                 name="cost"
                 value={form.cost}
+                max={fixedPrice || ""}
                 onChange={handleChange}
                 placeholder={fixedPrice ? `Max ${fixedPrice}` : "0.00"}
                 required
@@ -208,7 +197,8 @@ export default function DonatePage() {
               <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
                 Item description
               </label>
-              <input
+              <textarea
+                rows={3}
                 name="description"
                 value={form.description}
                 onChange={handleChange}

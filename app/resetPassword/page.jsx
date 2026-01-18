@@ -24,6 +24,8 @@ export default function ResetPasswordPage() {
 
 
   return (
+    <div className={`min-h-screen bg-[#fff6ef] text-slate-900 `}>
+
     <div className="flex flex-col items-center justify-center min-h-screen">
       <form onSubmit={handleUpdatePassword} className="p-8 bg-white shadow-md rounded-lg">
         <h1 className="text-2xl font-bold mb-4">Set New Password</h1>
@@ -38,6 +40,7 @@ export default function ResetPasswordPage() {
           {loading ? "Updating..." : "Update Password"}
         </button>
       </form>
+    </div>
     </div>
   );
 }

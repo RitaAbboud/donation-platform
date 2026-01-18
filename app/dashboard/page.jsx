@@ -278,7 +278,7 @@ export default function DashboardPage() {
               className={`flex items-center gap-2 px-4 py-1.5 border rounded-full font-semibold transition-all ${
                 showFilters
                   ? "bg-[#e25e2d] border-[#e25e2d] text-white"
-                  : "bg-white border-[#fae9d7] text-slate-600"
+                  : "bg-white border-[#fae9d7] text-[#e25e2d]"
               }`}
             >
               <SlidersHorizontal size={14} /> Filters

@@ -41,9 +41,15 @@ export default function BookmarksPage() {
     fetchBookmarks();
   }, [router]);
 
-  if (loading) {
-    return <div className="p-6 text-center">Loading your bookmarks...</div>;
-  }
+   if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#fff7f0]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#f3a552] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[#e25e2d] font-medium">Loading your bookmarks...</p>
+        </div>
+      </div>
+    );
 
   return (
     <div className={`min-h-screen bg-[#fff6ef] text-slate-900 `}>
