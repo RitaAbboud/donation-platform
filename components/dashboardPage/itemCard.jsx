@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { MapPin, Phone, Clock, X, ExternalLink,Heart } from "lucide-react";
+import { MapPin, Phone, Clock, X, ExternalLink, Heart } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -87,10 +87,9 @@ export default function ItemCard({ item }) {
     }
   };
 
-  // inside ItemCard component...
-return (
+  return (
     <>
-      {/* --- GRID CARD --- */}
+      
       <div
         onClick={() => setIsModalOpen(true)}
         className="group relative flex flex-col bg-white rounded-xl p-2 border border-[#fae9d7] hover:border-[#e25e2d] hover:shadow-xl transition-all duration-300 cursor-pointer"
@@ -102,8 +101,14 @@ return (
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
+          {issold && (
+            <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center backdrop-blur-[2px]">
+              <span className="bg-white text-slate-900 px-6 py-2 rounded-md font-bold text-sm tracking-widest uppercase border-b-4 border-red-500">
+                Reserved
+              </span>
+            </div>
+          )}
 
-          {/* Floating Bookmark Button */}
           <button
             onClick={(e) => {
               e.stopPropagation(); // Prevents opening the modal when clicking the heart
@@ -136,22 +141,22 @@ return (
         </div>
       </div>
 
-      {/* --- MODERNIZED DETAIL DIALOG --- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
           <div className="relative w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            
-            {/* Header Actions (Close & Bookmark) */}
             <div className="absolute top-4 right-4 z-30 flex gap-2">
               <button
                 onClick={toggleBookmark}
                 className={`rounded-full p-2 transition-all ${
-                  isBookmarked 
-                  ? "bg-[#e25e2d] text-white" 
-                  : "bg-white text-slate-500 hover:text-[#e25e2d] shadow-md"
+                  isBookmarked
+                    ? "bg-[#e25e2d] text-white"
+                    : "bg-white text-slate-500 hover:text-[#e25e2d] shadow-md"
                 }`}
               >
-                <Heart size={20} className={isBookmarked ? "fill-current" : ""} />
+                <Heart
+                  size={20}
+                  className={isBookmarked ? "fill-current" : ""}
+                />
               </button>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -194,24 +199,29 @@ return (
                   <h3 className="text-2xl font-bold text-slate-900 leading-tight mb-4">
                     {item.name || "Hand-picked Item"}
                   </h3>
-                  
+
                   <p className="text-slate-600 text-sm leading-relaxed mb-6">
                     {item.description}
                   </p>
 
                   <div className="space-y-3 pt-6 border-t border-slate-50">
-                     <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-xs font-medium uppercase tracking-tight">Price</span>
-                        <span className="text-3xl font-black text-slate-900">
-                          {formatCost(item.cost)}
-                        </span>
-                     </div>
-                     <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-xs font-medium uppercase tracking-tight">Location</span>
-                        <span className="text-slate-700 text-sm font-semibold flex items-center gap-1">
-                          <MapPin size={14} className="text-[#f3a552]" /> {item.location}
-                        </span>
-                     </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 text-xs font-medium uppercase tracking-tight">
+                        Price
+                      </span>
+                      <span className="text-3xl font-black text-slate-900">
+                        {formatCost(item.cost)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 text-xs font-medium uppercase tracking-tight">
+                        Location
+                      </span>
+                      <span className="text-slate-700 text-sm font-semibold flex items-center gap-1">
+                        <MapPin size={14} className="text-[#f3a552]" />{" "}
+                        {item.location}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -235,11 +245,11 @@ return (
                     onClick={handleReserveItem}
                     className={`w-full py-4 rounded-lg font-bold text-sm uppercase tracking-widest transition-all ${
                       issold
-                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        ? "bg-red-600 text-white hover:bg-red-500 shadow-lg hover:shadow-red-200/20"
                         : "bg-[#e25e2d] text-white hover:bg-[#d14d1c] shadow-lg hover:shadow-[#e25e2d]/20"
                     }`}
                   >
-                    {issold ? "Item Reserved" : "Reserve Item"}
+                    {issold ? " UnReserved" : "Reserve Item"}
                   </button>
                 </div>
               </div>

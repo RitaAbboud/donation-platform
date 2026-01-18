@@ -8,7 +8,6 @@ export  async function GET() {
         const { data, error } = await supabase
             .from("items")
             .select("*")
-            .eq("is_sold", false)
             .order("created_at", { ascending: false }); // Show newest items first
 
         //2 return the errors from the query it might have
