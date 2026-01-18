@@ -15,10 +15,11 @@ export default function Mission() {
         className={`max-w-4xl mx-auto px-6 transition-all duration-700 ease-out
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
       >
-        <div className="bg-[#fff7f0] p-10 md:p-14 rounded-2xl shadow-xl border border-[#f1d2b8] text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#e25e2d] mb-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#e25e2d] mb-6 text-center">
             Our Mission
           </h2>
+        <div className="bg-[#fff7f0] p-10 md:p-14 rounded-2xl shadow-xl border border-[#f1d2b8] text-center">
+          
 
           <p className="text-base md:text-lg text-gray-700 leading-relaxed">
             At <span className="font-semibold text-gray-900">One Hand</span>, help
