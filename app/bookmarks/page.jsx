@@ -61,7 +61,7 @@ export default function BookmarksPage() {
           >
             ← Back to Shop
           </button>
-      <h1 className="text-3xl font-bold mb-9 text-slate-800">My Bookmarks</h1>
+      <h1 className="text-3xl font-bold mb-9 text-[#e25e2d]">My Bookmarks</h1>
 
       {bookmarks.length === 0 ? (
         <p className="text-slate-500">You haven't bookmarked any items yet.</p>
