@@ -6,12 +6,14 @@ import ItemCard from "../../components/dashboardPage/itemCard";
 import { useEffect, useState, useMemo } from "react";
 import {
   Heart,
+  ShoppingCart,
   SlidersHorizontal,
   Search,
   LogOut,
   ChevronDown,
   X,
 } from "lucide-react";
+
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
@@ -255,29 +257,39 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => router.push("/bookmarks")}
-                className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]"
-              >
-                <Heart size={22} />
-              </button>
+  {/* Cart (future feature) */}
+  <button onClick={() => router.push("/cart")}>
+  <ShoppingCart size={22} />
+</button>
 
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
-              >
-                <LogOut size={18} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
 
-              <button
-                onClick={() => router.push("/donate")}
-                className="bg-[#e25e2d] hover:bg-[#d14d1c] text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all"
-              >
-                + Donate
-              </button>
+  {/* Bookmarks */}
+  <button
+    onClick={() => router.push("/bookmarks")}
+    className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]"
+  >
+    <Heart size={22} />
+  </button>
+
+  {/* Logout */}
+  <button
+    onClick={handleLogout}
+    className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
+  >
+    <LogOut size={18} />
+    <span className="hidden sm:inline">Logout</span>
+  </button>
+
+  {/* Donate */}
+  <button
+    onClick={() => router.push("/donate")}
+    className="bg-[#e25e2d] hover:bg-[#d14d1c] text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all"
+  >
+    + Donate
+  </button>
             </div>
-          </div>
+            </div>
+
 
           <div className="flex items-center gap-4 mt-4 overflow-x-auto pb-1 no-scrollbar text-sm">
             <button

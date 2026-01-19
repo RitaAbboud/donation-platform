@@ -46,11 +46,9 @@ export default function ItemCard({ item }) {
   const cleanPhoneNumber = item.phone_number?.replace(/\D/g, "");
 
   async function handleReserveItem() {
-    const newStatus = !issold;
-    const { error } = await supabase
-      .from("items")
-      .update({ is_sold: newStatus })
-      .eq("id", item.id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
     if (error) {
       alert("Error: " + error.message);
