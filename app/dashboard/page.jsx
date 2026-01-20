@@ -21,15 +21,14 @@ const poppins = Poppins({
   weight: ["400", "600", "700"],
 });
 
-
 const categoriesMap = {
   "697ab681-4fb9-4ee1-adc4-3d8f7d6cdff3": "Clothes",
   "ff364af8-e19e-4e6c-93c7-ca627e40c7f0": "Furniture",
   "0f6bc521-2bf5-4c94-a58d-357d502cb8c6": "Electronics",
-  "91935055-4ea0-49d8-a51c-8dedde58fc0c": "Toys",
-  "9a4ea99e-c275-44d8-96d0-4be94569d2f2": "Books",
+  "91935055-4ea0-49d8-a51c-8dedde58fc0e": "Toys",
+  "9a4ea99e-c275-44d8-96d0-4be94569d276": "Books",
+ 
 };
-
 
 const categoryMaxPrices = {
   Clothes: 10,
@@ -67,27 +66,27 @@ export default function DashboardPage() {
       {
         id: "697ab681-4fb9-4ee1-adc4-3d8f7d6cdff3",
         name: "Clothes",
-        image: "/images/clothes.jpg",
+        image: "/images/clothes.png",
       },
       {
         id: "ff364af8-e19e-4e6c-93c7-ca627e40c7f0",
         name: "Furniture",
-        image: "/images/furniture.jpg",
+        image: "/images/furniture.png",
       },
       {
         id: "0f6bc521-2bf5-4c94-a58d-357d502cb8c6",
         name: "Electronics",
-        image: "/images/electronics.jpg",
+        image: "/images/electronics.png",
       },
       {
-        id: "91935055-4ea0-49d8-a51c-8dedde58fc0c",
+        id: "91935055-4ea0-49d8-a51c-8dedde58fc0e",
         name: "Toys",
-        image: "/images/toys.jpg",
+        image: "/images/toys.png",
       },
       {
-        id: "9a4ea99e-c275-44d8-96d0-4be94569d2f2",
+        id: "9a4ea99e-c275-44d8-96d0-4be94569d276",
         name: "Books",
-        image: "/images/books.jpg",
+        image: "/images/books.png",
       },
     ],
     [],
@@ -257,39 +256,40 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-3">
-  {/* Cart (future feature) */}
-  <button onClick={() => router.push("/cart")}>
-  <ShoppingCart size={22} />
-</button>
+              {/* Cart (future feature) */}
+              <button
+                onClick={() => router.push("/cart")}
+                className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]"
+              >
+                <ShoppingCart size={22} />
+              </button>
 
+              {/* Bookmarks */}
+              <button
+                onClick={() => router.push("/bookmarks")}
+                className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]"
+              >
+                <Heart size={22} />
+              </button>
 
-  {/* Bookmarks */}
-  <button
-    onClick={() => router.push("/bookmarks")}
-    className="p-2.5 hover:bg-[#fae9d7] rounded-xl transition-colors text-[#e25e2d]"
-  >
-    <Heart size={22} />
-  </button>
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
+              >
+                <LogOut size={18} />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
 
-  {/* Logout */}
-  <button
-    onClick={handleLogout}
-    className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
-  >
-    <LogOut size={18} />
-    <span className="hidden sm:inline">Logout</span>
-  </button>
-
-  {/* Donate */}
-  <button
-    onClick={() => router.push("/donate")}
-    className="bg-[#e25e2d] hover:bg-[#d14d1c] text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all"
-  >
-    + Donate
-  </button>
+              {/* Donate */}
+              <button
+                onClick={() => router.push("/donate")}
+                className="bg-[#e25e2d] hover:bg-[#d14d1c] text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all"
+              >
+                + Add Item
+              </button>
             </div>
-            </div>
-
+          </div>
 
           <div className="flex items-center gap-4 mt-4 overflow-x-auto pb-1 no-scrollbar text-sm">
             <button
