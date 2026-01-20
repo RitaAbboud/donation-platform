@@ -41,7 +41,7 @@ export default function CartPage() {
       {/* Back to Home Top Left */}
       <div className="mb-8">
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/dashboard")}
           className="group flex items-center gap-2 text-sm sm:text-base text-gray-500 hover:text-[#e25e2d] transition-all font-semibold"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
