@@ -281,13 +281,31 @@ export default function DashboardPage() {
                 <span className="hidden sm:inline">Logout</span>
               </button>
 
-              {/* Donate */}
-              <button
-                onClick={() => router.push("/donate")}
-                className="bg-[#e25e2d] hover:bg-[#d14d1c] text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all"
-              >
-                + Add Item
-              </button>
+            {/* Actions */}
+<div className="flex items-center gap-3">
+  <button
+    onClick={() => router.push("/donate")}
+    className="px-4 py-2 text-sm font-semibold rounded-lg
+               bg-[#e25e2d] text-white
+               hover:bg-[#d14d1c]
+               transition-all duration-200
+               shadow-sm"
+  >
+    + Add Item
+  </button>
+
+  <button
+    onClick={() => router.push("/bundle-request")}
+    className="px-4 py-2 text-sm font-semibold rounded-lg
+               border border-[#e25e2d] text-[#e25e2d]
+               hover:bg-[#e25e2d] hover:text-white
+               transition-all duration-200"
+  >
+  + Bundle Request
+  </button>
+</div>
+
+
             </div>
           </div>
 
@@ -348,23 +366,20 @@ export default function DashboardPage() {
               </select>
             </div>
 
-            <div className="flex-1 w-full space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider text-slate-400 ml-1">
-                Location
-              </label>
-              <select
-                value={locationSearch}
-                onChange={(e) => setLocationSearch(e.target.value)}
-                className="w-full rounded-2xl border border-[#fae9d7] bg-[#fae9d7]/30 px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all cursor-pointer"
-              >
-                <option value="">All Locations</option>
-                {locations.map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-              </select>
-            </div>
+            
+           <div className="flex-1 w-full space-y-2">
+  <label className="text-xs font-black uppercase tracking-wider text-slate-400 ml-1">
+    Location
+  </label>
+  <input
+    type="text"
+    placeholder="Type location"
+    value={locationSearch}
+    onChange={(e) => setLocationSearch(e.target.value)}
+    className="w-full rounded-2xl border border-[#fae9d7] bg-[#fae9d7]/30 px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
+  />
+</div>
+
 
             <div className="flex-1 w-full space-y-2">
               <label className="text-xs font-black uppercase tracking-wider text-slate-400 ml-1">

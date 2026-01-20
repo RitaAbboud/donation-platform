@@ -59,7 +59,7 @@ export default function BookmarksPage() {
             onClick={() => router.back()}
             className="flex items-center gap-2 mb-10 text-slate-400 hover:text-[#e25e2d] transition-colors text-sm font-bold uppercase tracking-widest"
           >
-            ← Back to Shop
+            ← Back to shop
           </button>
       <h1 className="text-3xl font-bold mb-9 text-[#e25e2d]">My Bookmarks</h1>
 
