@@ -45,7 +45,7 @@ export default function CartPage() {
           className="group flex items-center gap-2 text-sm sm:text-base text-gray-500 hover:text-[#e25e2d] transition-all font-semibold"
         >
           <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
-          Back to home
+          Back to shop
         </button>
       </div>
 
