@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import ItemCard from "../../components/dashboardPage/itemCard";
+import RequestCard from "../../components/dashboardPage/requestCard";
+
 import { useEffect, useState, useMemo } from "react";
 import {
   Heart,
@@ -27,7 +29,6 @@ const categoriesMap = {
   "0f6bc521-2bf5-4c94-a58d-357d502cb8c6": "Electronics",
   "91935055-4ea0-49d8-a51c-8dedde58fc0e": "Toys",
   "9a4ea99e-c275-44d8-96d0-4be94569d276": "Books",
- 
 };
 
 const categoryMaxPrices = {
@@ -54,13 +55,19 @@ export default function DashboardPage() {
   const [priceTo, setPriceTo] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
-
+  const [hasMore, setHasMore] = useState(true);
+  const [activeTab, setActiveTab] = useState("donations");
+  const [requests, setRequests] = useState([]);
   /* ================= CONSTANTS ================= */
   const locations = useMemo(
     () => ["Beirut", "Tripoli", "Saida", "Jbeil", "Zahle"].sort(),
     [],
   );
 
+  const Tabs = [
+    { id: "donations", name: "Donations" },
+    { id: "requests", name: "Requests" },
+  ];
   const categories = useMemo(
     () => [
       {
@@ -92,50 +99,91 @@ export default function DashboardPage() {
     [],
   );
 
-  /* ================= DATA FETCHING  ================= */
-  useEffect(() => {
-    async function getData() {
-      try {
-        setLoading(true);
+  /* ================= THE REUSABLE FETCH FUNCTION ================= */
+  const LIMIT = 8;
+  async function fetchItems(isInitial = false) {
+    try {
+      setLoading(true);
+      const skip = isInitial ? 0 : items.length;
 
-        // 1. Identify the current user
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+      // 1. Identify the current user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        // 2. Fetch the items from your API
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/items`,
-          { cache: "no-store" },
-        );
-        const itemsData = await res.json();
+      // 2. Fetch the items from your API with skip/limit params
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/items?skip=${skip}&limit=${LIMIT}`,
+        { cache: "no-store" },
+      );
+      const itemsData = await res.json();
 
-        // 3. Fetch user's bookmarks from Supabase database
-        let bookmarkedIds = [];
-        if (user) {
-          const { data: bookmarks } = await supabase
-            .from("bookmarks")
-            .select("item_id")
-            .eq("user_id", user.id);
-          bookmarkedIds = bookmarks?.map((b) => b.item_id) || [];
-        }
+      // If API returns fewer items than our limit, we reached the end
+      if (itemsData.length < LIMIT) {
+        setHasMore(false);
+      }
 
-        // 4. Merge: Add bookmark truth and category name to items
-        const mergedData = itemsData.map((item) => ({
-          ...item,
-          category: categoriesMap[item.category_id],
-          is_bookmarked: bookmarkedIds.includes(item.id),
-        }));
+      // 3. Fetch user's bookmarks (same as your current logic)
+      let bookmarkedIds = [];
+      if (user) {
+        const { data: bookmarks } = await supabase
+          .from("bookmarks")
+          .select("item_id")
+          .eq("user_id", user.id);
+        bookmarkedIds = bookmarks?.map((b) => b.item_id) || [];
+      }
 
+      // 4. Merge: Add bookmark truth and category name
+      const mergedData = itemsData.map((item) => ({
+        ...item,
+        category: categoriesMap[item.category_id],
+        is_bookmarked: bookmarkedIds.includes(item.id),
+      }));
+
+      // 5. Update State
+      if (isInitial) {
         setItems(mergedData);
         setFilteredItems(mergedData);
-      } catch (err) {
-        console.error("Fetch error:", err);
-      } finally {
+      } else {
+        // Append new data to existing list
+        setItems((prev) => [...prev, ...mergedData]);
+        setFilteredItems((prev) => [...prev, ...mergedData]);
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchItems(true); 
+  }, []);
+
+  useEffect(() => {
+    async function fetchRequests() {
+      setLoading(true);
+      const { data, error } = await supabase.from("bundle_requests").select(`
+        id,
+        user_id,
+        category_id,
+        description,
+        phone,
+        location,
+        categories (
+          name
+        )
+      `);
+
+      if (error) {
+        console.error("Error fetching requests:", error);
+      } else {
+        setRequests(data);
         setLoading(false);
       }
     }
-    getData();
+
+    fetchRequests();
   }, []);
 
   /* ================= FILTER FUNCTION ================= */
@@ -441,27 +489,76 @@ export default function DashboardPage() {
           );
         })}
       </div>
+      <div>
+        {Tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`py-2 px-4 -mb-px text-lg font-medium ${
+              activeTab === tab.id
+                ? "border-b-2 border-orange-500 text-orange-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {tab.name}
+          </button>
+        ))}
+      </div>
 
       {/* ================= 4. MAIN CONTENT ================= */}
-      <main className="max-w-7xl mx-auto p-6 md:p-8">
-        {filteredItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-14">
-            {filteredItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
+      {activeTab === "donations" && (
+        <>
+          {" "}
+          <main className="max-w-7xl mx-auto p-6 md:p-8">
+            {filteredItems.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-14">
+                {filteredItems.map((item) => (
+                  <ItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-[#f8d5b8]">
+                <p className="text-[#f3a552] font-medium">No items found.</p>
+                <button
+                  onClick={() => resetFilters()}
+                  className="mt-4 text-[#e25e2d] underline font-bold"
+                >
+                  Show all items
+                </button>
+              </div>
+            )}
+          </main>
+          {hasMore && (
+            <div className="flex justify-center mt-8 mb-12">
+              <button
+                onClick={() => fetchItems(false)}
+                disabled={loading}
+                className="px-6 py-2 bg-[#e25e2d] text-white rounded-lg hover:bg-[#d14d1c] disabled:bg-gray-400"
+              >
+                {loading ? "Loading..." : "Load More"}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
+      {activeTab === "requests" && (
+        <div className="p-6">
+    
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {requests.map((request) => (
+              <RequestCard key={request.id} request={request} />
             ))}
           </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-[#f8d5b8]">
-            <p className="text-[#f3a552] font-medium">No items found.</p>
-            <button
-              onClick={resetFilters}
-              className="mt-4 text-[#e25e2d] underline font-bold"
-            >
-              Show all items
-            </button>
-          </div>
-        )}
-      </main>
+
+          {requests.length === 0 && (
+            <div className="text-center py-20 text-gray-500 bg-white rounded-2xl border">
+              No requests found.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

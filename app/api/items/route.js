@@ -1,28 +1,32 @@
 import { supabase } from "../../../lib/supabaseClient";
 import { NextResponse } from "next/server";
 
-//API route to fetch available items from the database
-export  async function GET() {
+export async function GET(request) {
     try {
-        //1 the query to fetch items from database.
+        // 1. Get query parameters from the URL
+        const { searchParams } = new URL(request.url);
+        const skip = parseInt(searchParams.get("skip") || "0");
+        const limit = parseInt(searchParams.get("limit") || "8");
+
+        // 2. Calculate the range
+        const from = skip;
+        const to = skip + limit - 1;
+
+        // 3. Updated query with .range()
         const { data, error } = await supabase
             .from("items")
             .select("*")
             .eq("is_sold", false)
-            .order("created_at", { ascending: false }); // Show newest items first
+            .order("created_at", { ascending: false })
+            .range(from, to); // This is the magic line for pagination
 
-        //2 return the errors from the query it might have
         if (error) {
             return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
         }
         
-        // 3 Return the data as JSON that the query fetched successfully
         return NextResponse.json(data);
 
-
     } catch (err) {
-        // Handle unexpected server errors
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-
 }

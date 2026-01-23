@@ -45,24 +45,43 @@ export default function ItemCard({ item }) {
 
   const cleanPhoneNumber = item.phone_number?.replace(/\D/g, "");
 
-  async function handleReserveItem() {
-    const newStatus = !issold;
+ async function handleReserveItem() {
+  const newStatus = !issold;
 
-  const {
-    data: { user },error
-  } = await supabase.auth.getUser();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (error) {
-      alert("Error: " + error.message);
-    } else {
-      const { error } = await supabase.from("items").update({is_sold: newStatus,reserved_by : newStatus ? user.id : null,}).eq("id", item.id);
-      if (error) {
-        alert("Error updating item: " + error.message);
-        return;
-      }
-      setisSold(newStatus);
-    }
+  if (userError) {
+    alert("Please log in to reserve items.");
+    return;
   }
+
+  // 1. Update the item AND fetch the owner's email in one go using a join
+  // Note: This assumes your owner_id points to a 'profiles' table with an 'email' column
+  const { data: updatedData, error: updateError } = await supabase
+    .from("items")
+    .update({ 
+      is_sold: newStatus, 
+      reserved_by: newStatus ? user.id : null 
+    })
+    .eq("id", item.id)
+    .select(`
+      title,
+      owner:owner_id ( email )
+    `)
+    .single();
+
+  if (updateError) {
+    alert("Error updating item: " + updateError.message);
+    return;
+  }
+
+  setisSold(newStatus);
+
+  // 3. Send notification ONLY if the item was just reserved (not un-reserved)
+  if (newStatus && updatedData?.owner?.email) {
+    sendReservationEmail(updatedData.owner.email, updatedData.title);
+  }
+}
 
   const toggleBookmark = async (e) => {
     if (e) e.stopPropagation(); // Prevents opening the modal
@@ -255,7 +274,7 @@ export default function ItemCard({ item }) {
 
             <div className="flex gap-3">
               <a
-                href={`tel:${cleanPhoneNumber}`}
+                href={`https://wa.me/${cleanPhoneNumber}`}
                 className="flex items-center justify-center p-5 rounded-[1rem] bg-white border-2 border-slate-100 text-slate-800 hover:border-[#e25e2d] hover:text-[#e25e2d] transition-all shadow-sm active:scale-95"
               >
                 <Phone size={22} fill="currentColor" className="opacity-20" />

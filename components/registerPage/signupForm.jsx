@@ -18,9 +18,14 @@ export default function SignupDialog() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [isagree, setIsagree] = useState(false);      
 
   async function handleSubmitButton(e) {
     e.preventDefault();
+    if(isagree === false){
+      setMsg("You must agree to the Terms of Service");
+      return;
+    }
     if (password !== confirmPassword) {
       setMsg("Passwords do not match");
       return;
@@ -125,6 +130,16 @@ export default function SignupDialog() {
                   }}
                   required
                 />
+              </div>
+
+              <div>
+                <input type="checkbox" id="terms"  className="mr-2" value={isagree} onChange={() => setIsagree(!isagree)}/>
+                <label htmlFor="terms" className="text-sm text-gray-500">
+                  I agree to the{" "}
+                  <a href="/terms" className="text-[#e25e2d] hover:underline">
+                    Terms of Service
+                  </a>
+                </label>
               </div>
             </div>
 
