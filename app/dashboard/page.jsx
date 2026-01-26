@@ -170,6 +170,7 @@ export default function DashboardPage() {
         description,
         phone,
         location,
+        created_at,
         categories (
           name
         )
@@ -264,7 +265,7 @@ export default function DashboardPage() {
   }
 
   /* ================= LOADING ================= */
-  if (loading)
+ if (loading && filteredItems.length === 0 && requests.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#fff7f0]">
         <div className="flex flex-col items-center gap-4">
@@ -273,6 +274,7 @@ export default function DashboardPage() {
         </div>
       </div>
     );
+  }
 
   return (
     <div
@@ -320,14 +322,7 @@ export default function DashboardPage() {
                 <Heart size={22} />
               </button>
 
-              {/* Logout */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
-              >
-                <LogOut size={18} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
+
 
             {/* Actions */}
 <div className="flex items-center gap-3">
@@ -351,6 +346,14 @@ export default function DashboardPage() {
   >
   + Bundle Request
   </button>
+                {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-xl text-slate-600 hover:bg-[#fae9d7] hover:text-red-400 transition-colors"
+              >
+                <LogOut size={18} />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
 </div>
 
 
@@ -504,76 +507,151 @@ export default function DashboardPage() {
           );
         })}
       </div>
-      <div>
-        {Tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`py-2 px-4 -mb-px text-lg font-medium ${
-              activeTab === tab.id
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            {tab.name}
-          </button>
-        ))}
-      </div>
+<div className="flex justify-center w-full my-8">
+  <div className="inline-flex p-1.5 bg-slate-100 rounded-[1rem] shadow-inner border border-slate-200">
+    {Tabs.map((tab) => {
+      const isActive = activeTab === tab.id;
+      return (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={`
+            relative flex items-center gap-2 px-8 py-3 rounded-[1rem] text-sm font-bold transition-all duration-300
+            ${isActive 
+              ? "bg-white text-[#e25e2d] shadow-md shadow-slate-200 scale-105" 
+              : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+            }
+          `}
+        >
+          {/* Subtle Icon indicators */}
+          {tab.id === "donations" ? (
+            <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-[#e25e2d]' : 'bg-slate-300'}`} />
+          ) : (
+            <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-[#e25e2d]' : 'bg-slate-300'}`} />
+          )}
+          
+          {tab.name}
 
-      {/* ================= 4. MAIN CONTENT ================= */}
-      {activeTab === "donations" && (
-        <>
-          {" "}
-          <main className="max-w-7xl mx-auto p-6 md:p-8">
-            {filteredItems.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-14">
-                {filteredItems.map((item) => (
-                  <ItemCard key={item.id} item={item} />
-                ))}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
+<div className="relative overflow-hidden bg-slate-50/50 min-h-screen">
+  {/* --- PREMIUM BACKGROUND DECORATIONS --- */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] pointer-events-none">
+    {/* Primary Blob */}
+    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[60%] rounded-full bg-orange-100/50 blur-[120px]" />
+    {/* Secondary Blob */}
+    <div className="absolute top-[-5%] right-[-5%] w-[30%] h-[50%] rounded-full bg-indigo-100/40 blur-[100px]" />
+  </div>
+
+  {/* --- DYNAMIC HEADER --- */}
+  <header className="relative pt-16 pb-8 px-6 text-center max-w-3xl mx-auto">
+    <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">
+      {activeTab === "donations" ? "Community " : "Help "}
+      <span className="text-[#e25e2d]">
+        {activeTab === "donations" ? "Marketplace" : "Requests"}
+      </span>
+    </h1>
+    <p className="text-slate-600 text-lg font-medium">
+      {activeTab === "donations" 
+        ? "Explore items shared by your neighbors. Find what you need, for free." 
+        : "Small asks, big impact. See what your community needs today."}
+    </p>
+  </header>
+
+  {/* --- TABS SECTION (Place your existing Tabs component here) --- */}
+  <div className="relative z-10 flex justify-center mb-10">
+     {/* Your Tabs map code goes here */}
+  </div>
+
+  {/* ================= 4. MAIN CONTENT ================= */}
+  <div className="relative z-10">
+    {activeTab === "donations" && (
+      <>
+        <main className="max-w-7xl mx-auto p-6 md:p-8">
+          {filteredItems.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {filteredItems.map((item) => (
+                <ItemCard key={item.id} item={item} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-24 bg-white/60 backdrop-blur-sm rounded-[3rem] border-2 border-dashed border-orange-200">
+              <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4">
+                 <span className="text-2xl">📦</span>
               </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-[#f8d5b8]">
-                <p className="text-[#f3a552] font-medium">No items found.</p>
-                <button
-                  onClick={() => resetFilters()}
-                  className="mt-4 text-[#e25e2d] underline font-bold"
-                >
-                  Show all items
-                </button>
-              </div>
-            )}
-          </main>
-          {hasMore && (
-            <div className="flex justify-center mt-8 mb-12">
+              <p className="text-[#f3a552] font-semibold text-xl">No items found.</p>
               <button
-                onClick={() => fetchItems(false)}
-                disabled={loading}
-                className="px-6 py-2 bg-[#e25e2d] text-white rounded-lg hover:bg-[#d14d1c] disabled:bg-gray-400"
+                onClick={() => resetFilters()}
+                className="mt-4 text-[#e25e2d] hover:text-[#d14d1c] font-bold transition-colors"
               >
-                {loading ? "Loading..." : "Load More"}
+                Show all items
               </button>
             </div>
           )}
-        </>
+        </main>
+     {hasMore && (
+  <div className="flex flex-col items-center justify-center mt-12 mb-20">
+    <button
+      onClick={() => fetchItems(false)}
+      disabled={loading}
+      className="group flex flex-col items-center gap-3 p-4 transition-all duration-300"
+    >
+      {/* The Visual Indicator */}
+      <div className={`
+        w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-500
+        ${loading 
+          ? "border-[#e25e2d] border-t-transparent animate-spin" 
+          : "border-slate-200 group-hover:border-[#e25e2d] group-hover:scale-110 bg-white shadow-sm"}
+      `}>
+        {!loading && (
+          <span className="text-[#e25e2d] transform group-hover:translate-y-1 transition-transform duration-300">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+            </svg>
+          </span>
+        )}
+      </div>
+
+      {/* The Text Label */}
+      <span className={`
+        text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300
+        ${loading ? "text-[#e25e2d] animate-pulse" : "text-slate-400 group-hover:text-slate-600"}
+      `}>
+        {loading ? "Discovering..." : "View More"}
+      </span>
+
+      {/* Optional: Subtle line connectors to make it feel like a bridge */}
+      {!loading && (
+        <div className="w-px h-8 bg-gradient-to-b from-slate-200 to-transparent mt-2" />
       )}
+    </button>
+  </div>
+)}
+      </>
+    )}
 
-      {activeTab === "requests" && (
-        <div className="p-6">
-    
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {requests.map((request) => (
-              <RequestCard key={request.id} request={request} />
-            ))}
-          </div>
-
-          {requests.length === 0 && (
-            <div className="text-center py-20 text-gray-500 bg-white rounded-2xl border">
-              No requests found.
-            </div>
-          )}
+    {activeTab === "requests" && (
+      <div className="max-w-7xl mx-auto p-6 md:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {requests.map((request) => (
+            <RequestCard key={request.id} request={request} />
+          ))}
         </div>
-      )}
+
+        {requests.length === 0 && (
+          <div className="text-center py-24 text-slate-400 bg-white/60 backdrop-blur-sm rounded-[3rem] border border-slate-100 shadow-sm">
+            <div className="text-4xl mb-4">🔍</div>
+            <p className="font-medium text-lg text-slate-500">No requests found in your area.</p>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</div>
     </div>
   );
 }

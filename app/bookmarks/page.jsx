@@ -66,7 +66,7 @@ export default function BookmarksPage() {
 
 
         {bookmarks.length === 0 ? (
-          < className="flex flex-col items-center justify-center text-center bg-white rounded-3xl shadow-xl p-14 max-w-xl mx-auto mt-20 relative overflow-hidden">
+          <div className="flex flex-col items-center justify-center text-center bg-white rounded-3xl shadow-xl p-14 max-w-xl mx-auto mt-20 relative overflow-hidden">
             {/* Floating subtle decoration */}
             <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-[#f3a552]/10 animate-pulse-slow" />
 
@@ -95,6 +95,7 @@ export default function BookmarksPage() {
               You haven’t bookmaked any items yet. Browse items, find treasures,
               and bookmark them to revisit later!
             </p>
+          </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
