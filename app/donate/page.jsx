@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import { Poppins } from "next/font/google";
-import { MapPin, Upload, Phone } from "lucide-react";
+import { X, Upload, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
 
 const poppins = Poppins({
@@ -31,6 +31,7 @@ export default function DonatePage() {
     lng: null,
     phone_number: "",
     image: null,
+    imagePreview: null, // New field for UI preview
     cost: "",
   });
 
@@ -66,20 +67,36 @@ export default function DonatePage() {
     setForm((p) => ({ ...p, [name]: value }));
   };
 
-  const handleImage = (e) =>
-    setForm((p) => ({ ...p, image: e.target.files[0] }));
+  // --- NEW: Image Handling Logic ---
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Cleanup old preview URL to save memory
+      if (form.imagePreview) URL.revokeObjectURL(form.imagePreview);
+      
+      setForm((p) => ({ 
+        ...p, 
+        image: file, 
+        imagePreview: URL.createObjectURL(file) 
+      }));
+    }
+  };
+
+  const removeImage = (e) => {
+    e.preventDefault(); // Prevent form bubbling
+    if (form.imagePreview) URL.revokeObjectURL(form.imagePreview);
+    setForm((p) => ({ ...p, image: null, imagePreview: null }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // 1️ Get current user
       const { data, error: userError } = await supabase.auth.getUser();
       if (userError || !data.user) throw new Error("You must be logged in");
       const user = data.user;
 
-      // 2️ Upload image if exists
       let image_url = null;
       if (form.image) {
         const ext = form.image.name.split(".").pop();
@@ -92,7 +109,6 @@ export default function DonatePage() {
         image_url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/donations/${path}`;
       }
 
-      // 3️ Insert item
       const { error: insertError } = await supabase.from("items").insert({
         owner_id: user.id,
         category_id: form.category_id,
@@ -105,8 +121,12 @@ export default function DonatePage() {
         cost: Number(form.cost),
         is_sold: false,
       });
+      
       if (insertError) throw insertError;
 
+      // Cleanup preview memory before redirecting
+      if (form.imagePreview) URL.revokeObjectURL(form.imagePreview);
+      
       alert("Item added successfully!");
       router.push("/dashboard");
     } catch (err) {
@@ -119,13 +139,12 @@ export default function DonatePage() {
 
   return (
     <div className={`min-h-screen bg-[#fff6ef] text-slate-900 ${poppins.className}`}>
-      {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-[#fae9d7]/20 z-0 hidden lg:block" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 lg:py-20">
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           
-          {/* Left */}
+          {/* Left Sidebar */}
           <div className="lg:w-1/3 space-y-6">
             <button 
               onClick={() => router.back()}
@@ -147,6 +166,52 @@ export default function DonatePage() {
           <div className="w-full lg:w-2/3 bg-white border border-[#fae9d7] rounded-2xl shadow-sm p-8 md:p-12">
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
+              {/* --- ENHANCED IMAGE UPLOAD SECTION --- */}
+              <div className="flex flex-col gap-2 md:col-span-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Item Photo
+                </label>
+                
+                <div className="relative">
+                  {form.imagePreview ? (
+                    <div className="relative group w-full h-72 rounded-2xl overflow-hidden border-2 border-[#fae9d7] shadow-inner bg-slate-50">
+                      <img 
+                        src={form.imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button
+                          onClick={removeImage}
+                          type="button"
+                          className="bg-white text-red-500 p-4 rounded-full shadow-2xl hover:bg-red-500 hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                        >
+                          <X size={24} strokeWidth={3} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#fae9d7] p-12 cursor-pointer bg-[#fff6ef] hover:bg-white hover:border-[#e25e2d] transition-all duration-300">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="p-4 bg-white rounded-2xl shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all">
+                          <Upload size={32} className="text-[#e25e2d]" />
+                        </div>
+                        <div className="text-center">
+                          <span className="block text-sm font-bold text-slate-700">Click to upload photo</span>
+                          <span className="text-xs text-slate-400">PNG or JPG (Max 10MB)</span>
+                        </div>
+                      </div>
+                      <input 
+                        type="file" 
+                        hidden 
+                        accept="image/*" 
+                        onChange={handleImage} 
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
+
               {/* Category */}
               <div className="flex flex-col gap-2 md:col-span-1">
                 <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
@@ -210,6 +275,7 @@ export default function DonatePage() {
                   value={form.location}
                   readOnly
                   required
+                  placeholder="Select on map above..."
                   className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all mt-2"
                 />
               </div>
@@ -232,26 +298,7 @@ export default function DonatePage() {
                 </div>
               </div>
 
-              {/* Image Upload */}
-              <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
-                  Item Photo
-                </label>
-                <label className="group relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#fae9d7] p-8 cursor-pointer bg-[#fff6ef] hover:bg-white hover:border-[#e25e2d] transition-all">
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
-                      <Upload size={24} className="text-[#e25e2d]" />
-                    </div>
-                    <span className="text-sm font-bold text-slate-600">
-                      {form.image ? form.image.name : "Click to upload image"}
-                    </span>
-                    <span className="text-xs text-slate-400">PNG, JPG up to 10MB</span>
-                  </div>
-                  <input type="file" hidden onChange={handleImage} />
-                </label>
-              </div>
-
-              {/* Submit */}
+              {/* Submit Button */}
               <div className="md:col-span-2 pt-4">
                 {costError && (
                   <p className="text-xs text-red-500 mb-4 font-bold uppercase tracking-tight">⚠️ {costError}</p>

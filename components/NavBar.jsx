@@ -69,7 +69,7 @@ export default function NavBar({
         >
           <div
             className="flex items-center justify-center w-9 h-9 rounded-xl
-                       bg-gradient-to-br from-[#e25e2d] to-[#f3a552]
+                       bg-[#e25e2d] 
                        shadow-[0_10px_25px_-10px_rgba(226,94,45,0.8)]"
           >
             <Heart size={18} className="text-white" fill="white" />
@@ -130,7 +130,7 @@ export default function NavBar({
             <Link
               href="/dashboard"
               className="px-6 py-3 rounded-xl text-sm font-bold text-white
-                         bg-gradient-to-br from-[#e25e2d] to-[#f3a552]
+                         bg-[#e25e2d] 
                          shadow-[0_15px_35px_-15px_rgba(226,94,45,0.7)]
                          hover:scale-[1.03] transition"
             >

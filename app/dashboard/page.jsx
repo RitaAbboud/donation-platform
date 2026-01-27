@@ -267,7 +267,7 @@ export default function DashboardPage() {
                 {userInfo?.user_metadata?.full_name?.[0] || userInfo?.email?.[0] || "U"}
               </button>
 
-              <div className={`absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden transition-all duration-300 transform ${showUserDropdown ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2 scale-95 pointer-events-none"}`}>
+              <div className={`absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden transition-all duration-300 transform ${showUserDropdown ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2 scale-95 pointer-events-none"}`}>
                 <div className="px-4 py-3 border-b border-slate-100">
                   <p className="text-sm text-slate-700 font-semibold truncate">
                     {userInfo?.user_metadata?.full_name || userInfo?.email || "No Name"}
@@ -286,7 +286,7 @@ export default function DashboardPage() {
             <button onClick={() => router.push("/donate")} className="px-4 py-2 text-sm font-semibold rounded-lg bg-[#e25e2d] text-white hover:bg-[#d14d1c] transition-all duration-200 shadow-sm">
               + Add Item
             </button>
-            <button onClick={() => router.push("/bundle-request")} className="px-4 py-2 text-sm font-semibold rounded-lg border border-[#e25e2d] text-[#e25e2d] hover:bg-[#e25e2d] hover:text-white transition-all duration-200">
+            <button onClick={() => router.push("/bundle-request")} className="px-4 py-2 text-sm font-semibold rounded-lg border border-[#e25e2d] text-[#e25e2d] hover:bg-[#fae9d7] hover:text-[#e25e2d]  transition-all duration-200">
               + Bundle Request
             </button>
           </div>
@@ -455,7 +455,46 @@ export default function DashboardPage() {
                 </button>
               </div>
             )}
+            {hasMore && (
+  <div className="flex flex-col items-center justify-center mt-12 mb-20">
+    <button
+      onClick={() => fetchItems(false)}
+      disabled={loading}
+      className="group flex flex-col items-center gap-3 p-4 transition-all duration-300"
+    >
+      {/* The Visual Indicator */}
+      <div className={`
+        w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-500
+        ${loading 
+          ? "border-[#e25e2d] border-t-transparent animate-spin" 
+          : "border-slate-200 group-hover:border-[#e25e2d] group-hover:scale-110 bg-white shadow-sm"}
+      `}>
+        {!loading && (
+          <span className="text-[#e25e2d] transform group-hover:translate-y-1 transition-transform duration-300">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+            </svg>
+          </span>
+        )}
+      </div>
+
+      {/* The Text Label */}
+      <span className={`
+        text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300
+        ${loading ? "text-[#e25e2d] animate-pulse" : "text-slate-400 group-hover:text-slate-600"}
+      `}>
+        {loading ? "Discovering..." : "View More"}
+      </span>
+
+      {/* Optional: Subtle line connectors to make it feel like a bridge */}
+      {!loading && (
+        <div className="w-px h-8 bg-gradient-to-b from-slate-200 to-transparent mt-2" />
+      )}
+    </button>
+  </div>
+)}
           </main>
+          
         )}
 
         {activeTab === "requests" && (

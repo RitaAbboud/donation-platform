@@ -43,7 +43,7 @@ export default function LoginDialog() {
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white selection:bg-[#fae9d7]">
       
       {/* Left Column: Brand Messaging (Matches Signup) */}
-      <div className="hidden lg:flex flex-col justify-center p-12 xl:p-20 bg-[#f8d5b8] relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-center p-12 xl:p-20 bg-[#fdf2e9] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#f3a552]/10 rounded-full -mr-20 -mt-20" />
         
         <div className="max-w-md relative z-10">

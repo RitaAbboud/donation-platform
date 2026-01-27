@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { MapPin, Phone, Clock, X, ExternalLink, Heart,ChevronRight} from "lucide-react";
+import { MapPin, Phone, X, Heart,ChevronRight} from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -11,7 +11,7 @@ export default function ItemCard({ item }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [issold, setisSold] = useState(item.is_sold || false);
 
-  // 2. CRITICAL: Update local state if the Dashboard re-fetches data
+  
   useEffect(() => {
     setIsBookmarked(item.is_bookmarked);
     setisSold(item.is_sold);
@@ -275,9 +275,9 @@ export default function ItemCard({ item }) {
             <div className="flex gap-3">
               <a
                 href={`https://wa.me/${cleanPhoneNumber}`}
-                className="flex items-center justify-center p-5 rounded-[1rem] bg-white border-2 border-slate-100 text-slate-800 hover:border-[#e25e2d] hover:text-[#e25e2d] transition-all shadow-sm active:scale-95"
+                className="flex items-center justify-center p-5 rounded-[1rem]  border-green-400 text-green-600 hover:border-b-green-600 hover:text-green-800 transition-all shadow-sm active:scale-95"
               >
-                <Phone size={22} fill="currentColor" className="opacity-20" />
+                <Phone size={22} fill="currentColor"  className="opacity-110 " />
               </a>
 
               <button

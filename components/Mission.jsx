@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Quote } from "lucide-react";
+import { Quote,Heart } from "lucide-react";
 
 export default function Mission() {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,72 +19,107 @@ export default function Mission() {
     return () => observer.disconnect();
   }, []);
 
-  return (
-    <section
-      id="mission"
-      ref={sectionRef}
-      className="py-32 bg-[#fdf2e9] overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-16 items-center">
-        {/* LEFT SIDE: VISUAL ELEMENT */}
-        <div
-          className={`lg:col-span-5 relative transition-all duration-1000 delay-200 ${
-            isVisible
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 -translate-x-12"
-          }`}
-        >
-          <div className="relative">
-            {/* Large background text or shape */}
-            <span className="absolute -top-20 -left-10 text-[15rem] font-black text-orange-200/30 select-none">
-              “
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight relative z-10">
-              Dignity is the <br />
-              <span className="text-[#e25e2d]">Heart of Giving.</span>
-            </h2>
-            <div className="mt-8 w-24 h-1.5 bg-[#e25e2d] rounded-full" />
-          </div>
-        </div>
+return (
+  <section
+    id="mission"
+    ref={sectionRef}
+    className="relative pt-40 pb-32 bg-[#fdf2e9] overflow-hidden "
+  >
+    {/* TOP WAVE TRANSITION: Blends from the #fdf2e9 hero into this white section */}
+    <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
+      <svg 
+  className="relative block w-full h-[80px] md:h-[120px]" 
+  viewBox="0 0 1200 120" 
+  preserveAspectRatio="none"
+>
+  <path 
+    d="M0,0 C300,0 300,80 600,80 C900,80 900,0 1200,0 V120 H0 Z" 
+    fill="#ffffff" 
+  />
+</svg>
+    </div>
 
-        {/* RIGHT SIDE: CONTENT */}
-        <div
-          className={`lg:col-span-7 transition-all duration-1000 delay-500 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-          }`}
-        >
-          <div className="bg-white/50 backdrop-blur-sm p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-orange-900/5 border border-white">
-            <Quote className="text-[#e25e2d] mb-6 opacity-40" size={40} />
+    {/* DECORATIVE ACCENT */}
+    <div className="absolute top-1/4 right-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl -z-0 opacity-60" />
 
-            <p className="text-xl md:text-2xl text-slate-700 leading-relaxed font-medium">
-              At{" "}
-              <span className="text-slate-900 font-bold underline decoration-[#f8d5b8] decoration-4 underline-offset-4">
-                One Hand
-              </span>
-              , we believe help should never feel{" "}
-              <span className="text-[#e25e2d]">humiliating</span> or
-              complicated.
-            </p>
-
-            <p className="mt-8 text-lg text-slate-600 leading-relaxed">
-              Some have more than they need; others are missing the basics. We
-              bridge that gap with{" "}
-              <span className="font-semibold text-slate-900">respect</span> and
-              <span className="font-semibold text-slate-900">
-                {" "}
-                transparency
-              </span>
-              .
-            </p>
-
-            <div className="mt-10 pt-8 border-t border-orange-100">
-              <p className="text-[#e25e2d] font-bold text-xl italic">
-                "One hand gives. Another receives. Both walk away stronger."
-              </p>
-            </div>
+    <div className="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-16 items-center">
+      
+      {/* LEFT SIDE: VISUAL ELEMENT */}
+      <div
+        className={`lg:col-span-5 relative transition-all duration-1000 delay-200 ${
+          isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"
+        }`}
+      >
+        <div className="relative">
+          {/* Decorative Large Quote Mark */}
+          <span className="absolute -top-24 -left-12 text-[18rem] font-serif font-black text-[#ffffff] select-none leading-none -z-10">
+            “
+          </span>
+          
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1] relative z-10">
+            Dignity is the <br />
+            <span className="text-[#e25e2d] inline-block mt-2">Heart of Giving.</span>
+          </h2>
+          
+          <div className="mt-8 flex items-center gap-4">
+            <div className="w-16 h-1.5 bg-[#e25e2d] rounded-full" />         
           </div>
         </div>
       </div>
-    </section>
-  );
+
+{/* RIGHT SIDE: CONTENT CARD */}
+<div
+  className={`lg:col-span-7 transition-all duration-1000 delay-500 ${
+    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+  }`}
+>
+  <div className="relative group p-2">
+    {/* Subtle Glow - Toned down for smoothness */}
+    <div className="absolute -top-6 -right-6 w-48 h-48 bg-orange-100/40 rounded-full blur-3xl" />
+    <div className="absolute -bottom-6 -left-6 w-48 h-48 bg-slate-100/50 rounded-full blur-3xl" />
+
+    {/* The Main Card */}
+    <div className="relative bg-white/90 backdrop-blur-md p-8 md:p-14 rounded-[3rem] shadow-[0_30px_70px_-20px_rgba(15,23,42,0.08)] border border-orange-50/50 transition-all duration-500 group-hover:shadow-[0_40px_90px_-20px_rgba(226,94,45,0.12)]">
+      
+      {/* Refined Quote Icon */}
+      <div className="mb-8 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-50/50 text-[#e25e2d]">
+        <Quote size={32} />
+      </div>
+
+      <div className="space-y-8">
+        <h3 className="text-2xl md:text-3xl text-slate-800 leading-snug font-semibold tracking-tight">
+          At{" "}
+          <span className="px-1.5 py-0.5 bg-orange-100/50 rounded-md text-slate-900 font-bold">
+            One Hand
+          </span>
+          , we believe help should never feel{" "} humiliating or complicated.
+        </h3>
+
+        <p className="text-lg md:text-xl text-slate-600/90 leading-relaxed">
+          Some have more than they need; others are missing the basics. We
+          bridge that gap with  respect  and transparency.
+        </p>
+      </div>
+
+      {/* Signature Footer - Simplified and Consistent */}
+      <div className="mt-12 pt-8 border-t border-slate-100">
+        <div className="flex items-center gap-5">
+          <Heart size={20} className="text-[#e25e2d]/60" />
+          <p className="text-slate-500 text-lg md:text-xl font-medium italic">
+            "One hand gives. Another receives. Both walk away stronger."
+          </p>
+        </div>
+      </div>
+
+      {/* Subtle corner accent */}
+      <div className="absolute top-10 right-10 flex gap-1">
+        <div className="w-1.5 h-1.5 rounded-full bg-orange-200" />
+        <div className="w-1.5 h-1.5 rounded-full bg-orange-100" />
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+  </section>
+);
 }

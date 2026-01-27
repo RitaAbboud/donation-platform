@@ -1,9 +1,8 @@
 import React from "react";
-import { Phone, MapPin, Tag, ExternalLink, Package, Clock } from "lucide-react";
+import { Phone, MapPin, Tag, Package, Clock } from "lucide-react";
 
 const RequestCard = ({ request }) => {
-  const { categories, title, description, phone, location, created_at } = request;
-console.log("Full Request Object:", request);
+  const { categories, description, phone, location, created_at } = request;
 
   const formatRelativeTime = (dateString) => {
     if (!dateString) return "";
@@ -23,6 +22,7 @@ console.log("Full Request Object:", request);
     }
     return "Just now";
   };
+  const myphone = phone?.replace(/\D/g, "");
 
   return (
     <div className="group relative bg-white border border-slate-200 rounded-3xl p-5 transition-all duration-300 hover:border-[#e25e2d]/30 hover:shadow-xl hover:shadow-slate-200/50">
@@ -43,13 +43,10 @@ console.log("Full Request Object:", request);
 
       {/* Item Title & Description */}
       <div className="mb-5">
-        <h3 className="text-lg font-bold text-slate-800 group-hover:text-[#e25e2d] transition-colors mb-2 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-slate-800 group-hover:text-[#e25e2d] transition-colors mb-2 flex items-center gap-2">
           <Package size={18} className="text-slate-400" />
-          {title || "Item Requested"}
-        </h3>
-        <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
           {description || "No further details provided for this request."}
-        </p>
+        </h2>
       </div>
 
       {/* Info Grid */}
@@ -70,19 +67,20 @@ console.log("Full Request Object:", request);
           </div>
           <div className="flex flex-col">
             <span className="text-[10px] uppercase font-bold text-slate-400 leading-none mb-1">Contact</span>
-            <span className="text-sm font-mono font-medium text-slate-700">{phone}</span>
+            <span className="text-sm font-mono font-medium text-slate-700">{myphone}</span>
           </div>
         </div>
       </div>
 
-      {/* Primary Action */}
-      <button
-        onClick={() => (window.location.href = `https://wa.me/${phone}`)}
-        className="w-full bg-[#e25e2d] text-white py-3.5 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#d14d1c] active:scale-[0.98] transition-all shadow-md shadow-slate-200"
-      >
-        Help with this Item
-        <ExternalLink size={16} />
-      </button>
+<a
+  href={`https://wa.me/${myphone}`}
+  className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full font-bold text-sm transition-all hover:bg-emerald-600 hover:text-white shadow-sm"
+>
+  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+  Help with this Item
+  <Phone size={16} />
+</a>
+    
     </div>
   );
 };

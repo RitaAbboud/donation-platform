@@ -62,7 +62,6 @@ export default function BookmarksPage() {
         >
           ← Back to Shop
         </button>
-        <h1 className="text-3xl font-bold mb-9 text-[#e25e2d]">My Bookmarks</h1>
 
 
         {bookmarks.length === 0 ? (
@@ -70,14 +69,7 @@ export default function BookmarksPage() {
             {/* Floating subtle decoration */}
             <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-[#f3a552]/10 animate-pulse-slow" />
 
-    <div className="max-w-7xl mx-auto p-6" >
-       <button 
-            onClick={() => router.back()}
-            className="flex items-center gap-2 mb-10 text-slate-400 hover:text-[#e25e2d] transition-colors text-sm font-bold uppercase tracking-widest"
-          >
-            ← Back to shop
-          </button>
-      <h1 className="text-3xl font-bold mb-9 text-[#e25e2d]">My Bookmarks</h1>
+              <div className="max-w-7xl mx-auto p-6" >
 
 
             {/* Icon */}
