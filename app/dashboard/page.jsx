@@ -41,6 +41,8 @@ const categoryMaxPrices = {
 
 export default function DashboardPage() {
   const router = useRouter();
+  
+
 
   /* ================= STATE ================= */
   const [items, setItems] = useState([]);
@@ -321,7 +323,6 @@ export default function DashboardPage() {
               >
                 <Heart size={22} />
               </button>
-
 
 
             {/* Actions */}
