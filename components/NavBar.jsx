@@ -64,7 +64,7 @@ export default function NavBar({
 
         {/* ================= LEFT ================= */}
         <div
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/dashboard")}
           className="flex items-center gap-3 cursor-pointer"
         >
           <div
@@ -102,25 +102,13 @@ export default function NavBar({
         {/* ================= RIGHT ================= */}
         <div className="flex items-center gap-3">
           {variant === "profile" ? (
-            <>
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl
-                           bg-gradient-to-br from-[#e25e2d] to-[#f3a552]
-                           text-white text-sm font-bold
-                           shadow-[0_15px_35px_-15px_rgba(226,94,45,0.7)]
-                           hover:scale-[1.03] active:scale-95 transition"
-              >
-                <Home size={16} />
-                Dashboard
-              </button>
-
+            <>        
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl
                            bg-white/70 text-slate-700 text-sm font-semibold
-                           shadow-[0_10px_30px_-20px_rgba(0,0,0,0.3)]
-                           hover:bg-white transition"
+                           
+                           hover:bg-red-400 transition hover:text-white"
               >
                 <LogOut size={16} />
                 Logout

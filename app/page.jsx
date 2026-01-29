@@ -1,4 +1,3 @@
-// app/page.jsx
 "use client";
 
 import { Poppins } from "next/font/google";
@@ -8,11 +7,11 @@ import Features from "../components/Features";
 import Mission from "../components/Mission";
 import Info from "../components/Footer";
 
-
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
 });
+
 
 export default function Page() {
   return (

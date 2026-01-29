@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
-
+import DashboardLayout from "../../components/dashboardPage/DashboardLayout"; 
+import { useSearch } from "../../context/SearchContext"; 
 import ItemCard from "../../components/dashboardPage/itemCard";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 
@@ -36,23 +37,8 @@ export default function CartPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#fff6ef] to-[#fff2e5] p-6 md:p-10 lg:p-16">
-
-      {/* Back to Home Top Left */}
-      <div className="mb-8">
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="group flex items-center gap-2 text-sm sm:text-base text-gray-500 hover:text-[#e25e2d] transition-all font-semibold"
-        >
-          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
-          Back to shop
-        </button>
-      </div>
-
-      <h1 className="text-3xl md:text-4xl font-black mb-12 text-[#e25e2d]">
-        My Reserved Items
-      </h1>
-
+    <DashboardLayout>
+      <div className="min-h-screen bg-gradient-to-b from-[#fff6ef] to-[#fff2e5] p-6 md:p-10 lg:p-16">
       {/* LOADING STATE */}
       {loading && (
         <div className="flex items-center justify-center min-h-[50vh]">
@@ -95,5 +81,7 @@ export default function CartPage() {
         </div>
       )}
     </div>
+    </DashboardLayout>
+    
   );
 }

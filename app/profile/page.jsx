@@ -42,7 +42,7 @@ export default function MyProfile() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-slate-500
-                      bg-gradient-to-br from-[#fff4ec] via-[#ffe8d8] to-[#fff1e6]">
+                      bg-[#fff7f0]">
         Loading profile…
       </div>
     );
@@ -53,7 +53,7 @@ export default function MyProfile() {
   const reservedItems = items.filter((i) => i.is_sold).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fff4ec] via-[#ffe8d8] to-[#fff1e6]">
+    <div className="min-h-screen bg-[#fff7f0]">
       {/* ================= NAVBAR ================= */}
       <NavBar variant="profile" title="My Profile" subtitle={user.email} />
 
@@ -77,7 +77,7 @@ export default function MyProfile() {
             <button
               onClick={() => router.push("/donate")}
               className="px-6 py-2.5 rounded-xl text-sm font-bold text-white
-                         bg-gradient-to-br from-[#e25e2d] to-[#f3a552]
+                         bg-[#e25e2d] 
                          shadow-[0_15px_35px_-15px_rgba(226,94,45,0.7)]
                          hover:scale-[1.03] transition"
             >

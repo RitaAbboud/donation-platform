@@ -55,8 +55,7 @@ export default function ItemCard({ item }) {
     return;
   }
 
-  // 1. Update the item AND fetch the owner's email in one go using a join
-  // Note: This assumes your owner_id points to a 'profiles' table with an 'email' column
+ 
   const { data: updatedData, error: updateError } = await supabase
     .from("items")
     .update({ 
@@ -77,7 +76,7 @@ export default function ItemCard({ item }) {
 
   setisSold(newStatus);
 
-  // 3. Send notification ONLY if the item was just reserved (not un-reserved)
+  
   if (newStatus && updatedData?.owner?.email) {
     sendReservationEmail(updatedData.owner.email, updatedData.title);
   }
@@ -181,7 +180,7 @@ export default function ItemCard({ item }) {
         <div className="relative w-full h-full min-h-[350px] group">
           <Image
             src={item.image_url || "/api/placeholder/400/320"}
-            alt={item.name}
+            alt={item.name || "item image"}
             fill
             className="object-contain p-6 md:p-12 transition-all duration-700 group-hover:scale-105"
             priority
