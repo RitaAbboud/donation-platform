@@ -210,20 +210,32 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* ================= TABS ================= */}
-        <div className="flex justify-center my-8">
-          <div className="inline-flex p-1.5 bg-slate-100 rounded-2xl border border-slate-200 shadow-inner">
-            {Tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === tab.id ? "bg-white text-[#e25e2d] shadow-md scale-105" : "text-slate-500 hover:text-slate-700"}`}
-              >
-                {tab.name}
-              </button>
-            ))}
-          </div>
-        </div>
+<div className="flex justify-center my-12">
+  <div className="relative inline-flex p-1 bg-white/50 backdrop-blur-md rounded-2xl border border-orange-100/50 shadow-[0_10px_30px_-10px_rgba(226,94,45,0.15)]">
+    {Tabs.map((tab) => {
+      const isActive = activeTab === tab.id;
+      return (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={`
+            relative px-10 py-3 rounded-1.5xl text-sm font-bold tracking-tight transition-all duration-500 ease-out
+            ${isActive 
+              ? "text-[#e25e2d] bg-white shadow-[0_4px_12px_rgba(226,94,45,0.12)] scale-[1.02]" 
+              : "text-slate-400 hover:text-slate-600 hover:bg-white/30"
+            }
+          `}
+        >
+          {/* Subtle dot for active state */}
+          {isActive && (
+            <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#e25e2d] rounded-full shadow-[0_0_8px_#e25e2d]" />
+          )}
+          {tab.name}
+        </button>
+      );
+    })}
+  </div>
+</div>
 
         {/* ================= MAIN CONTENT ================= */}
         <main className="relative bg-slate-50/50 min-h-screen pb-20">

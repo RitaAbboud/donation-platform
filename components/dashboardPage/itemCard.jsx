@@ -63,10 +63,6 @@ export default function ItemCard({ item }) {
       reserved_by: newStatus ? user.id : null 
     })
     .eq("id", item.id)
-    .select(`
-      title,
-      owner:owner_id ( email )
-    `)
     .single();
 
   if (updateError) {
@@ -281,7 +277,7 @@ export default function ItemCard({ item }) {
 
               <button
                 onClick={handleReserveItem}
-                className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-[1rem] font-black text-sm uppercase tracking-[0.15em] transition-all duration-300 ${
+                className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-[1rem] font-black text-sm cursor-pointer uppercase tracking-[0.15em] transition-all duration-300 ${
                   issold
                     ? "bg-[#e25e2d] text-white"
                     : "bg-[#e25e2d] text-white hover:bg-[#d14d1c] shadow-[0_15px_30px_-10px_rgba(226,94,45,0.4)] active:scale-[0.98]"
