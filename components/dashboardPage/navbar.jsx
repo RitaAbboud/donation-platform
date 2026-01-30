@@ -1,12 +1,15 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
+import { usePathname  } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import { useSearch } from "../../context/SearchContext";
 import { Search, ShoppingCart, Heart } from "lucide-react";
 
 export default function DashNav() {
   const router = useRouter();
+  const pathname = usePathname();
   const { search, setSearch, userInfo } = useSearch();
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
@@ -19,9 +22,11 @@ export default function DashNav() {
     <div className="px-4 md:px-8 py-3 border-b border-[#fae9d7]/50 bg-white/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Logo */}
-        <div className="font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer shrink-0" onClick={() => router.push("/dashboard")}>
-          OneHand<span className="text-[#f3a552]">.</span>
-        </div>
+        <Link href="/dashboard">
+        <div className= "font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer shrink-0" >
+           OneHand<span className="text-[#f3a552]">.</span>
+          </div>
+          </Link>
 
         {/* Search Bar */}
         <div className="hidden md:flex relative flex-1 max-w-xl group">
@@ -38,8 +43,9 @@ export default function DashNav() {
         {/* Actions */}
         <div className="flex items-center gap-2 md:gap-3">
           <div className="flex items-center mr-2">
-            <button onClick={() => router.push("/cart")} className="p-2 hover:bg-[#fae9d7]/50 cursor-pointer rounded-lg text-[#e25e2d]"><ShoppingCart size={20} /></button>
-            <button onClick={() => router.push("/bookmarks")} className="p-2 hover:bg-[#fae9d7]/50 cursor-pointer rounded-lg text-[#e25e2d]"><Heart size={20} /></button>
+            <Link href="/cart" className={`p-2 hover:bg-[#fae9d7]/50 cursor-pointer rounded-lg text-[#e25e2d] ${pathname === "/cart" ? "bg-[#fae9d7]/50 cursor-pointer rounded-lg text-[#e25e2d]" : null} `}><ShoppingCart size={20} /></Link>
+           
+            <Link href="/bookmarks" className={`p-2 hover:bg-[#fae9d7]/50 cursor-pointer rounded-lg text-[#e25e2d] ${pathname === "/bookmarks" ? "bg-[#fae9d7]/50 cursor-pointer rounded-lg text-[#e25e2d]": null }`}><Heart size={20} /></Link>
           </div>
 
           <div className="hidden sm:flex items-center gap-2 border-l border-[#fae9d7] pl-4 mr-2">

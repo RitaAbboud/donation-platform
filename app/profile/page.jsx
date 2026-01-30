@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import NavBar from "../../components/NavBar";
-import { Package, CheckCircle, Clock, Phone } from "lucide-react";
+import { Package, CheckCircle, Clock, Phone ,Edit, Trash} from "lucide-react";
 import BundleRequestMap from "../bundle-request/BundleRequestMap";
 
 export default function MyProfile() {
@@ -260,12 +260,12 @@ const handleUpdate = async (id) => {
                    
                 <button 
                     onClick={() => deleteRequest(req.id)} 
-                    className="p-3 rounded-xl bg-slate-50 text-slate-400 cursor-pointer hover:bg-[#e25e2d] hover:text-white transition-colors"
+                    className="p-2 rounded-l bg-slate-50 text-slate-700 cursor-pointer hover:bg-red-400 hover:text-white transition-colors"
                   >
-                    delete
+                    <Trash />
                 </button>
-                  <button onClick={() => openEditModal(req)} className="p-3 rounded-xl bg-slate-50 text-slate-400 cursor-pointer hover:bg-[#e25e2d] hover:text-white transition-colors">
-                            edit
+                  <button onClick={() => openEditModal(req)} className="p-2 rounded-l bg-slate-50 text-slate-700 cursor-pointer hover:bg-orange-300 hover:text-white transition-colors">
+                           <Edit/>
                   </button>
                   </div>
                 </div>
