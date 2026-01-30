@@ -110,24 +110,46 @@ export default function DashboardPage() {
 
   /* ================= FILTER LOGIC ================= */
   // Effect for Items
-  useEffect(() => {
-    let filtered = [...items];
-    if (search) filtered = filtered.filter((i) => JSON.stringify(i).toLowerCase().includes(search.toLowerCase()));
-    if (activeCategoryId) filtered = filtered.filter((i) => i.category_id === activeCategoryId);
-    if (locationSearch) filtered = filtered.filter((i) => i.location?.toLowerCase().includes(locationSearch.toLowerCase()));
-    if (priceFrom) filtered = filtered.filter((i) => i.cost >= Number(priceFrom));
-    if (priceTo) filtered = filtered.filter((i) => i.cost <= Number(priceTo));
-    setFilteredItems(filtered);
-  }, [search, activeCategoryId, filterCategory, locationSearch, priceFrom, priceTo, items]);
+useEffect(() => {
+  let filtered = [...items];
+
+  if (search) {
+    const query = search.toLowerCase();
+    filtered = filtered.filter((i) => 
+      i.description?.toLowerCase().includes(query)
+    );
+  }
+
+  if (activeCategoryId) filtered = filtered.filter((i) => i.category_id === activeCategoryId);
+  if (locationSearch) filtered = filtered.filter((i) => i.location?.toLowerCase().includes(locationSearch.toLowerCase()));
+  if (priceFrom) filtered = filtered.filter((i) => i.cost >= Number(priceFrom));
+  if (priceTo) filtered = filtered.filter((i) => i.cost <= Number(priceTo));
+  
+  setFilteredItems(filtered);
+}, [items, search, activeCategoryId, locationSearch, priceFrom, priceTo]);
 
   // Effect for Requests
-  useEffect(() => {
-    let filtered = [...requests];
-    if (activeCategoryId) filtered = filtered.filter((r) => r.category_id === activeCategoryId);
-    if (search) filtered = filtered.filter((r) => r.description?.toLowerCase().includes(search.toLowerCase()) || r.location?.toLowerCase().includes(search.toLowerCase()));
-    setFilteredRequests(filtered);
-  }, [activeTab, activeCategoryId, requests, search]);
+useEffect(() => {
+  let filtered = [...requests];
 
+  if (search) {
+    const query = search.toLowerCase();
+    filtered = filtered.filter((r) => 
+      r.description?.toLowerCase().includes(query) || 
+      r.location?.toLowerCase().includes(query)
+    );
+  }
+
+  if (activeCategoryId) {
+    filtered = filtered.filter((r) => r.category_id === activeCategoryId);
+  }
+  
+  setFilteredRequests(filtered);
+  
+  // Clean up: Only include variables used inside the effect
+}, [requests, search, activeCategoryId]);
+  
+  
   const resetFilters = () => {
     setSearch("");
     setActiveCategoryId("");
@@ -140,7 +162,7 @@ export default function DashboardPage() {
   /* ================= LOADING VIEW ================= */
   if (loading && items.length === 0 && requests.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#fff7f0]">
+      <div className="flex items-center justify-center min-h-screen bg-[#fff7f0] ">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-[#f3a552] border-t-transparent rounded-full animate-spin"></div>
           <p className="text-[#e25e2d] font-medium">Finding treasures...</p>
@@ -149,6 +171,7 @@ export default function DashboardPage() {
     );
   }
 
+  console.log("Current Search:", search, "Filtered Count:", filteredItems.length);
   return (
     <DashboardLayout>
       <div className={`min-h-screen text-slate-800 ${poppins.className}`}>

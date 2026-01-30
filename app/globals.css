@@ -2,3 +2,11 @@
 html {
     scroll-behavior: smooth;
 }
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -20px) scale(1.05); }
+}
+
+.animate-blob {
+  animation: blob-float 15s infinite alternate ease-in-out;
+}
