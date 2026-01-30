@@ -3,14 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, LogOut, Home } from "lucide-react";
+import Image from "next/image";
+import { LogOut } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
-export default function NavBar({
-  variant = "landing", // "landing" | "profile"
-  title,
-  subtitle,
-}) {
+export default function NavBar({ variant = "landing", title, subtitle }) {
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const router = useRouter();
@@ -52,13 +49,12 @@ export default function NavBar({
   return (
     <nav
       className={`fixed top-0 w-full z-[100] transition-all duration-500
-      ${
-        variant === "landing"
+      ${variant === "landing"
           ? scrolled
             ? "py-3 bg-gradient-to-b from-white/80 to-white/60 backdrop-blur-xl shadow-[0_20px_50px_-25px_rgba(0,0,0,0.35)]"
             : "py-5 bg-transparent"
           : "py-4 bg-gradient-to-b from-[#fff7f2]/90 to-white/70 backdrop-blur-xl shadow-[0_15px_40px_-20px_rgba(0,0,0,0.3)]"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
@@ -67,20 +63,20 @@ export default function NavBar({
           onClick={() => router.push("/dashboard")}
           className="flex items-center gap-3 cursor-pointer"
         >
-          <div
-            className="flex items-center justify-center w-9 h-9 rounded-xl
-                       bg-[#e25e2d] 
-                       shadow-[0_10px_25px_-10px_rgba(226,94,45,0.8)]"
-          >
-            <Heart size={18} className="text-white" fill="white" />
+          <div className="w-16 h-16 relative">
+            <Image
+              src="/images/logo3.png"
+              alt="Logo"
+              fill
+              className="object-contain scale-150"
+            />
           </div>
 
-          <span className="font-black text-xl text-slate-900 tracking-tight">
-            OneHand<span className="text-[#e25e2d]">.</span>
-          </span>
+
+
 
           {variant === "profile" && (
-            <div className="ml-6">
+            <div className="ml-4">
               <p className="text-slate-900 font-extrabold leading-tight">
                 {title}
               </p>
@@ -102,18 +98,15 @@ export default function NavBar({
         {/* ================= RIGHT ================= */}
         <div className="flex items-center gap-3">
           {variant === "profile" ? (
-            <>        
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl
-                           bg-white/70 text-slate-700 text-sm font-semibold
-                           
-                           hover:bg-red-400 transition hover:text-white"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl
+                         bg-white/70 text-slate-700 text-sm font-semibold
+                         hover:bg-red-400 transition hover:text-white"
+            >
+              <LogOut size={16} />
+              Logout
+            </button>
           ) : user ? (
             <Link
               href="/dashboard"
@@ -142,7 +135,6 @@ export default function NavBar({
 }
 
 /* ================= LINK ================= */
-
 function NavLink({ href, children }) {
   return (
     <Link

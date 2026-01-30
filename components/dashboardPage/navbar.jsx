@@ -4,6 +4,8 @@ import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { useSearch } from "../../context/SearchContext";
 import { Search, ShoppingCart, Heart } from "lucide-react";
+import Image from "next/image";
+
 
 export default function DashNav() {
   const router = useRouter();
@@ -18,10 +20,20 @@ export default function DashNav() {
   return (
     <div className="px-4 md:px-8 py-3 border-b border-[#fae9d7]/50 bg-white/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        {/* Logo */}
-        <div className="font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer shrink-0" onClick={() => router.push("/dashboard")}>
-          OneHand<span className="text-[#f3a552]">.</span>
+        <div
+          onClick={() => router.push("/dashboard")}
+          className="relative w-16 h-10 ml-4 cursor-pointer shrink-0"
+        >
+          <Image
+            src="/images/logo3.png"
+            alt="Logo"
+            fill
+            className="object-contain scale-150"
+            priority
+          />
         </div>
+
+
 
         {/* Search Bar */}
         <div className="hidden md:flex relative flex-1 max-w-xl group">

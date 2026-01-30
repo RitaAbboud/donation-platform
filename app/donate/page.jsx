@@ -73,11 +73,11 @@ export default function DonatePage() {
     if (file) {
       // Cleanup old preview URL to save memory
       if (form.imagePreview) URL.revokeObjectURL(form.imagePreview);
-      
-      setForm((p) => ({ 
-        ...p, 
-        image: file, 
-        imagePreview: URL.createObjectURL(file) 
+
+      setForm((p) => ({
+        ...p,
+        image: file,
+        imagePreview: URL.createObjectURL(file)
       }));
     }
   };
@@ -121,12 +121,12 @@ export default function DonatePage() {
         cost: Number(form.cost),
         is_sold: false,
       });
-      
+
       if (insertError) throw insertError;
 
       // Cleanup preview memory before redirecting
       if (form.imagePreview) URL.revokeObjectURL(form.imagePreview);
-      
+
       alert("Item added successfully!");
       router.push("/dashboard");
     } catch (err) {
@@ -143,21 +143,16 @@ export default function DonatePage() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 lg:py-20">
         <div className="flex flex-col lg:flex-row gap-16 items-start">
-          
+
           {/* Left Sidebar */}
           <div className="lg:w-1/3 space-y-6">
-            <button 
-              onClick={() => router.back()}
-              className="flex items-center gap-2 text-slate-400 hover:text-[#e25e2d] transition-colors text-sm font-bold uppercase tracking-widest"
-            >
-              ← Back to Shop
-            </button>
+
             <h1 className="text-5xl font-black text-slate-900 leading-tight">
               Give your items <br />
               <span className="text-[#e25e2d]">New Life.</span>
             </h1>
             <p className="text-slate-500 text-lg leading-relaxed">
-              Your unwanted treasures could be exactly what someone else is searching for. 
+              Your unwanted treasures could be exactly what someone else is searching for.
               Join our community of mindful sharing.
             </p>
           </div>
@@ -165,52 +160,6 @@ export default function DonatePage() {
           {/* Right Form */}
           <div className="w-full lg:w-2/3 bg-white border border-[#fae9d7] rounded-2xl shadow-sm p-8 md:p-12">
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              {/* --- ENHANCED IMAGE UPLOAD SECTION --- */}
-              <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
-                  Item Photo
-                </label>
-                
-                <div className="relative">
-                  {form.imagePreview ? (
-                    <div className="relative group w-full h-72 rounded-2xl overflow-hidden border-2 border-[#fae9d7] shadow-inner bg-slate-50">
-                      <img 
-                        src={form.imagePreview} 
-                        alt="Preview" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <button
-                          onClick={removeImage}
-                          type="button"
-                          className="bg-white text-red-500 p-4 rounded-full shadow-2xl hover:bg-red-500 hover:text-white transition-all transform hover:scale-110 active:scale-95"
-                        >
-                          <X size={24} strokeWidth={3} />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#fae9d7] p-12 cursor-pointer bg-[#fff6ef] hover:bg-white hover:border-[#e25e2d] transition-all duration-300">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="p-4 bg-white rounded-2xl shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all">
-                          <Upload size={32} className="text-[#e25e2d]" />
-                        </div>
-                        <div className="text-center">
-                          <span className="block text-sm font-bold text-slate-700">Click to upload photo</span>
-                          <span className="text-xs text-slate-400">PNG or JPG (Max 10MB)</span>
-                        </div>
-                      </div>
-                      <input 
-                        type="file" 
-                        hidden 
-                        accept="image/*" 
-                        onChange={handleImage} 
-                      />
-                    </label>
-                  )}
-                </div>
-              </div>
 
               {/* Category */}
               <div className="flex flex-col gap-2 md:col-span-1">
@@ -247,6 +196,53 @@ export default function DonatePage() {
                   className="w-full rounded-xl border border-[#fae9d7] bg-[#fff6ef] px-4 py-3 text-sm focus:border-[#e25e2d] outline-none transition-all"
                 />
               </div>
+              {/* --- ENHANCED IMAGE UPLOAD SECTION --- */}
+              <div className="flex flex-col gap-2 md:col-span-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Item Photo
+                </label>
+
+                <div className="relative">
+                  {form.imagePreview ? (
+                    <div className="relative group w-full h-72 rounded-2xl overflow-hidden border-2 border-[#fae9d7] shadow-inner bg-slate-50">
+                      <img
+                        src={form.imagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button
+                          onClick={removeImage}
+                          type="button"
+                          className="bg-white text-red-500 p-4 rounded-full shadow-2xl hover:bg-red-500 hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                        >
+                          <X size={24} strokeWidth={3} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#fae9d7] p-12 cursor-pointer bg-[#fff6ef] hover:bg-white hover:border-[#e25e2d] transition-all duration-300">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="p-4 bg-white rounded-2xl shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all">
+                          <Upload size={32} className="text-[#e25e2d]" />
+                        </div>
+                        <div className="text-center">
+                          <span className="block text-sm font-bold text-slate-700">Click to upload photo</span>
+                          <span className="text-xs text-slate-400">PNG or JPG (Max 10MB)</span>
+                        </div>
+                      </div>
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        onChange={handleImage}
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
+
+
 
               {/* Description */}
               <div className="flex flex-col gap-2 md:col-span-2">

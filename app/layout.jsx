@@ -1,12 +1,12 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 // 1. Import the Provider (Check the path to match your folder structure)
-import { SearchProvider } from "../context/SearchContext"; 
+import { SearchProvider } from "../context/SearchContext";
 
-const inter = Poppins({ 
+const inter = Poppins({
   subsets: ["latin"],
-  weight: "400", 
-  variable: "--font-poppins", 
+  weight: "400",
+  variable: "--font-poppins",
 });
 
 export const metadata = {
