@@ -68,14 +68,15 @@ export default function BookmarksPage() {
     }
   };
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-[#fff7f0] ">
-      <div className="w-12 h-12 border-4 border-[#f3a552] border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  );
+ 
 
   return (
     <DashboardLayout> 
+       {loading && (
+    <div className="flex items-center justify-center min-h-screen bg-[#fff7f0] ">
+      <div className="w-12 h-12 border-4 border-[#e25e2d] border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  ) } 
       <div className="min-h-screen bg-[#fff6ef] text-slate-900 ">
         <div className="max-w-7xl mx-auto p-6">
 

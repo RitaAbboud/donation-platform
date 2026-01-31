@@ -9,6 +9,9 @@ import { useSearch } from "../../context/SearchContext";
 import { useEffect, useState, useMemo } from "react";
 import { SlidersHorizontal, ChevronDown, X } from "lucide-react";
 import { Poppins } from "next/font/google";
+import { motion } from "framer-motion";
+
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,8 +31,9 @@ const categoryMaxPrices = {
 };
 
 export default function DashboardPage() {
+
   const router = useRouter();
-  
+
   // Pulling global state from our new SearchContext
   const { search, setSearch, setUserInfo } = useSearch();
 
@@ -91,7 +95,8 @@ export default function DashboardPage() {
         is_bookmarked: bookmarkedIds.includes(item.id),
       }));
 
-      setItems((prev) => (isInitial ? mergedData : [...prev, ...mergedData]));
+      setItems(isInitial ? mergedData : [...items, ...mergedData]);
+
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
@@ -159,25 +164,22 @@ useEffect(() => {
     setPriceTo("");
   };
 
-  /* ================= LOADING VIEW ================= */
-  if (loading && items.length === 0 && requests.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#fff7f0] ">
+
+  return (
+    <DashboardLayout>
+      {loading && (items.length === 0) && (requests.length === 0) &&(
+          <div className="flex items-center justify-center min-h-screen bg-[#fff7f0] ">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#f3a552] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-[#e25e2d] border-t-transparent rounded-full animate-spin"></div>
           <p className="text-[#e25e2d] font-medium">Finding treasures...</p>
         </div>
       </div>
-    );
-  }
+        )}
 
-  console.log("Current Search:", search, "Filtered Count:", filteredItems.length);
-  return (
-    <DashboardLayout>
       <div className={`min-h-screen text-slate-800 ${poppins.className}`}>
-        
+
         {/* ================= SECONDARY NAV (Filters) ================= */}
-        <div className="px-4 md:px-8 py-2 bg-white/50 border-b border-[#fae9d7]">
+        <div className="px-4 md:px-8 py-2 bg-white border-[#fae9d7]">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
@@ -188,9 +190,8 @@ useEffect(() => {
               </button>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-2 px-4 py-1.5 border rounded-full text-xs font-bold transition-all ${
-                  showFilters ? "bg-[#e25e2d] text-white" : "bg-white text-[#e25e2d]"
-                }`}
+                className={`flex items-center gap-2 px-4 py-1.5 border rounded-full cursor-pointer text-xs font-bold transition-all ${showFilters ? "bg-[#e25e2d] text-white" : "bg-white text-[#e25e2d]"
+                  }`}
               >
                 <SlidersHorizontal size={14} /> FILTERS
               </button>
@@ -222,43 +223,58 @@ useEffect(() => {
         </div>
 
         {/* ================= CATEGORY ICONS ================= */}
-        <div className="bg-white py-8 flex justify-center gap-8 md:gap-16 shadow-sm overflow-x-auto no-scrollbar px-6">
-          {categories.map((cat) => (
-            <button key={cat.id} onClick={() => setActiveCategoryId(activeCategoryId === cat.id ? "" : cat.id)} className="flex flex-col items-center gap-3 min-w-[90px] group">
-              <div className={`w-16 h-16 md:w-22 md:h-22 rounded-full overflow-hidden border-4 transition-all duration-300 ${activeCategoryId === cat.id ? "border-[#e25e2d] scale-110 shadow-lg shadow-orange-100" : "border-transparent group-hover:border-[#fae9d7]"}`}>
-                <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-              </div>
-              <span className={`text-sm font-bold ${activeCategoryId === cat.id ? "text-[#e25e2d]" : "text-slate-500"}`}>{cat.name}</span>
-            </button>
-          ))}
+        <div className="mt-12 flex flex-col items-center gap-8">
+          {/* Category buttons */}
+          <div className="flex justify-center gap-8 md:gap-16 px-6">
+            {categories.map((cat) => {             
+              const isActive = activeCategoryId === "" || activeCategoryId === cat.id;
+
+              return (
+                <motion.button
+                  key={cat.id}
+                  onClick={() => setActiveCategoryId(activeCategoryId === cat.id ? "" : cat.id)}
+                  whileHover={{ scale: 1.05 }}
+                  animate={{ scale: isActive ? 1.05 : 1, opacity: isActive ? 1 : 0.5 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                  className="flex flex-col items-center gap-3 min-w-[90px]"
+                >
+                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 transition-colors duration-300 ${isActive ? "border-gray-300 shadow-md" : "border-transparent"}`}>
+                    <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+                  </div>
+                  <span className={`text-sm font-bold transition-colors ${isActive ? "text-gray-800" : "text-slate-400"}`}>{cat.name}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Donations / Requests buttons under categories */}
+          <div className="flex justify-center mt-6">
+            <div className="relative inline-flex p-1 bg-white/50 backdrop-blur-md rounded-2xl border border-orange-100/50 shadow-[0_10px_30px_-10px_rgba(226,94,45,0.15)]">
+              {Tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+              relative px-10 py-3 rounded-1.5xl text-sm font-bold tracking-tight transition-all duration-500 ease-out
+              ${isActive
+                        ? "text-[#e25e2d] bg-white shadow-[0_4px_12px_rgba(226,94,45,0.12)] scale-[1.02]"
+                        : "text-slate-400 hover:text-slate-600 hover:bg-white/30"
+                      }
+            `}
+                  >
+                    {isActive && (
+                      <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#e25e2d] rounded-full shadow-[0_0_8px_#e25e2d]" />
+                    )}
+                    {tab.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-<div className="flex justify-center my-12">
-  <div className="relative inline-flex p-1 bg-white/50 backdrop-blur-md rounded-2xl border border-orange-100/50 shadow-[0_10px_30px_-10px_rgba(226,94,45,0.15)]">
-    {Tabs.map((tab) => {
-      const isActive = activeTab === tab.id;
-      return (
-        <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={`
-            relative px-10 py-3 rounded-1.5xl text-sm font-bold tracking-tight transition-all duration-500 ease-out
-            ${isActive 
-              ? "text-[#e25e2d] bg-white shadow-[0_4px_12px_rgba(226,94,45,0.12)] scale-[1.02]" 
-              : "text-slate-400 hover:text-slate-600 hover:bg-white/30"
-            }
-          `}
-        >
-          {/* Subtle dot for active state */}
-          {isActive && (
-            <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#e25e2d] rounded-full shadow-[0_0_8px_#e25e2d]" />
-          )}
-          {tab.name}
-        </button>
-      );
-    })}
-  </div>
-</div>
 
         {/* ================= MAIN CONTENT ================= */}
         <main className="relative bg-slate-50/50 min-h-screen pb-20">
@@ -267,7 +283,7 @@ useEffect(() => {
               {activeTab === "donations" ? "Community " : "Help "}
               <span className="text-[#e25e2d]">{activeTab === "donations" ? "Marketplace" : "Requests"}</span>
             </h1>
-            <p className="text-slate-600 text-lg">{activeTab === "donations" ? "Find what you need, for free." : "See what your community needs today."}</p>
+            <p className="text-slate-600 text-lg">{activeTab === "donations" ? "Find what you need" : "See what your community needs today"}</p>
           </header>
 
           {/* DONATIONS CONTENT */}

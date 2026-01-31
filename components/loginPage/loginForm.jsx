@@ -60,14 +60,6 @@ export default function LoginDialog() {
       {/* Right Column: The Form */}
       <div className="flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-20">
         <div className="w-full max-w-sm mx-auto">
-          
-          <button 
-            onClick={() => router.push("/")} 
-            className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#e25e2d] mb-8 sm:mb-12 transition-all p-2 -ml-2"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> 
-            Back to home
-          </button>
 
           <div className="mb-8 sm:mb-10">
             <h1 className="text-3xl sm:text-4xl font-bold text-[#222222] tracking-tight flex items-center gap-3">

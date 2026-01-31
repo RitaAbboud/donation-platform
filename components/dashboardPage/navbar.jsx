@@ -5,7 +5,9 @@ import { useState } from "react";
 import { usePathname  } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import { useSearch } from "../../context/SearchContext";
-import { Search, ShoppingCart, Heart } from "lucide-react";
+import { Search, ShoppingCart, User,LogOut, Heart } from "lucide-react";
+import Image from "next/image";
+
 
 export default function DashNav() {
   const router = useRouter();
@@ -21,12 +23,26 @@ export default function DashNav() {
   return (
     <div className="px-4 md:px-8 py-3 border-b border-[#fae9d7]/50 bg-white/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+
         {/* Logo */}
-        <Link href="/dashboard">
+        {/* <Link href="/dashboard">
         <div className= "font-black text-2xl tracking-tighter text-[#e25e2d] cursor-pointer shrink-0" >
            OneHand<span className="text-[#f3a552]">.</span>
           </div>
-          </Link>
+          </Link> */}
+
+        <div
+          onClick={() => router.push("/dashboard")}
+          className="relative w-16 h-10 ml-4 cursor-pointer shrink-0"
+        >
+          <Image
+            src="/images/logo3a.png"
+            alt="Logo"
+            fill
+            className="object-contain scale-150"
+            priority
+          />
+        </div>
 
         {/* Search Bar */}
         <div className="hidden md:flex relative flex-1 max-w-xl group">
@@ -58,15 +74,35 @@ export default function DashNav() {
             <button onClick={() => setShowUserDropdown(!showUserDropdown)} className="w-9 h-9 rounded-full bg-[#fae9d7] text-[#e25e2d] cursor-pointer font-bold flex items-center justify-center border border-white uppercase">
               {userInfo?.user_metadata?.full_name?.[0] || userInfo?.email?.[0] || "U"}
             </button>
-            {showUserDropdown && (
-              <div className="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden">
-                <div className="px-4 py-3 bg-slate-50/50 border-b border-slate-100">
-                  <p className="text-sm text-slate-700 font-semibold truncate">{userInfo?.email}</p>
-                </div>
-                <button onClick={() => router.push("/profile")} className="w-full text-left px-4 py-2.5 text-sm hover:bg-[#fae9d7]/30">My Profile</button>
-                <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-500 font-bold border-t">Logout</button>
-              </div>
-            )}
+           {showUserDropdown && (
+  <div className="absolute right-0 mt-3 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
+    {/* User Header */}
+    <div className="px-5 py-4 bg-slate-50/80 border-b border-slate-100">
+      <p className="text-sm text-slate-900 font-medium truncate">{userInfo?.email}</p>
+    </div>
+
+    {/* Navigation Options */}
+    <div className="py-1">
+      <button 
+        onClick={() => router.push("/profile")} 
+        className="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-[#fae9d7]/40 hover:text-[#e25e2d] transition-colors"
+      > 
+        <User size={18} className="opacity-70" />
+        <span>My Profile</span>
+      </button>
+
+      <div className="border-t border-slate-100 mt-1">
+        <button 
+          onClick={handleLogout} 
+          className="w-full flex items-center gap-3 px-5 py-3 text-sm text-red-600 font-semibold hover:bg-red-50 transition-colors"
+        >
+          <LogOut size={18} />
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+)}
           </div>
         </div>
       </div>

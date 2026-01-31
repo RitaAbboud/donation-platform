@@ -73,12 +73,7 @@ export default function BundleRequestPage() {
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           {/* LEFT */}
           <div className="lg:w-1/3 space-y-6">
-            <button
-              onClick={() => router.back()}
-              className="text-slate-400 hover:text-[#e25e2d] text-sm font-bold uppercase tracking-widest"
-            >
-              ← Back to shop
-            </button>
+
             <h1 className="text-5xl font-black leading-tight">
               Request a <br />
               <span className="text-[#e25e2d]">Bundle.</span>
