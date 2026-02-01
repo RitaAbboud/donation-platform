@@ -83,7 +83,7 @@ export default function CartItemCard({ item, onUnreserve }) {
         {/* Description */}
         <div className="flex gap-2 mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
           <Info size={14} className="text-[#f3a552] shrink-0 mt-0.5" />
-          <p className="text-xs text-slate-600 line-clamp-2 italic leading-relaxed">
+          <p className="text-l font-bold text-slate-800 line-clamp-2  leading-relaxed">
             {item.description || "No description provided."}
           </p>
         </div>
@@ -114,13 +114,13 @@ export default function CartItemCard({ item, onUnreserve }) {
         <button
           onClick={handleUnreserve}
           disabled={loading}
-          className="mt-auto w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-red-50 text-red-500 font-black text-[11px] uppercase tracking-[0.1em] hover:bg-red-500 hover:text-white hover:border-red-500 transition-all active:scale-[0.98] disabled:opacity-50"
+          className="mt-auto w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-red-50 text-red-500 hover:bg-red-600 font-black text-[11px] uppercase tracking-[0.1em] bg-red-500 text-white hover:border-red-00 transition-all active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? (
             <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
-              <X size={16} />
+              <X size={16} strokeWidth={4}/>
               Cancel Reservation
             </>
           )}

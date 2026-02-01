@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { LogOut, LayoutDashboard, User } from "lucide-react"; // Added more context icons
 import { supabase } from "../lib/supabaseClient";
 
 export default function NavBar({ variant = "landing", title, subtitle }) {
@@ -12,32 +12,22 @@ export default function NavBar({ variant = "landing", title, subtitle }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  /* ================= SCROLL EFFECT ================= */
   useEffect(() => {
     if (variant !== "landing") return;
-
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [variant]);
 
-  /* ================= AUTH ================= */
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
     };
-
     getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
@@ -48,46 +38,53 @@ export default function NavBar({ variant = "landing", title, subtitle }) {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-[100] transition-all duration-500
+      className={`fixed top-0 w-full z-[100] transition-all duration-500 px-4 sm:px-8
       ${variant === "landing"
           ? scrolled
-            ? "py-3 bg-gradient-to-b from-white/80 to-white/60 backdrop-blur-xl shadow-[0_20px_50px_-25px_rgba(0,0,0,0.35)]"
-            : "py-5 bg-transparent"
-          : "py-4 bg-gradient-to-b from-[#fff7f2]/90 to-white/70 backdrop-blur-xl shadow-[0_15px_40px_-20px_rgba(0,0,0,0.3)]"
+            ? "py-3 bg-white/80 backdrop-blur-xl shadow-sm"
+            : "py-6 bg-transparent"
+          : "py-3 bg-white/40 backdrop-blur-md border-b border-slate-200/50"
         }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-
-        {/* ================= LEFT ================= */}
-        <div
-          onClick={() => router.push("/dashboard")}
-          className="flex items-center gap-3 cursor-pointer"
-        >
-          <div className="w-16 h-16 relative">
-            <Image
-              src="/images/logo3a.png"
-              alt="Logo"
-              fill
-              className="object-contain scale-150"
-            />
-          </div>
-
-
-
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        
+        {/* ================= LEFT: BRAND & CONTEXT ================= */}
+        <div className="flex items-center gap-6">
+          
+            <div className="relative w-9 h-9 transition-transform group-hover:scale-110">
+              <Image
+                src="/images/logo3d.png"
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <div className="hidden sm:block font-black text-xl tracking-tighter text-slate-900">
+              One<span className="text-[#fb9148]">Hand.</span>
+            </div>
+         
 
           {variant === "profile" && (
-            <div className="ml-4">
-              <p className="text-slate-900 font-extrabold leading-tight">
-                {title}
-              </p>
-              <p className="text-xs text-slate-500">{subtitle}</p>
+            <div className="hidden md:flex items-center gap-3 pl-6 border-l border-slate-200">
+              <div className="h-8 w-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+                <LayoutDashboard size={18} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-black uppercase tracking-widest text-slate-400 leading-none mb-1">
+                  {title}
+                </span>
+                <span className="text-sm font-bold text-slate-700 leading-none">
+                  {subtitle?.split('@')[0]} {/* Clean up email display */}
+                </span>
+              </div>
             </div>
           )}
         </div>
 
-        {/* ================= CENTER (LANDING) ================= */}
+        {/* ================= CENTER: NAVIGATION (LANDING) ================= */}
         {variant === "landing" && (
-          <div className="hidden md:flex gap-10 font-semibold text-slate-700">
+          <div className="hidden md:flex gap-8 font-bold text-slate-600">
             <NavLink href="#hero">Home</NavLink>
             <NavLink href="#features">Features</NavLink>
             <NavLink href="#mission">Mission</NavLink>
@@ -95,37 +92,40 @@ export default function NavBar({ variant = "landing", title, subtitle }) {
           </div>
         )}
 
-        {/* ================= RIGHT ================= */}
+        {/* ================= RIGHT: ACTIONS ================= */}
         <div className="flex items-center gap-3">
           {variant === "profile" ? (
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl
-                         bg-white/70 text-slate-700 text-sm font-semibold
-                         hover:bg-red-400 transition hover:text-white"
-            >
-              <LogOut size={16} />
-              Logout
-            </button>
+            
+            <>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl
+                           bg-slate-500 text-white text-xs font-black uppercase tracking-wider
+                           hover:bg-red-500 hover:shadow-lg hover:shadow-red-200 transition-all active:scale-95"
+              >
+                <LogOut size={14} strokeWidth={3} />
+                Logout
+              </button>
+            </>
+           
+          
           ) : user ? (
             <Link
               href="/dashboard"
-              className="px-6 py-3 rounded-xl text-sm font-bold text-white
-                         bg-[#e25e2d] 
-                         shadow-[0_15px_35px_-15px_rgba(226,94,45,0.7)]
-                         hover:scale-[1.03] transition"
+              className="px-6 py-2.5 rounded-2xl text-sm font-bold text-white
+                         bg-[#e25e2d]
+                         hover:bg-[#ed754a] transition-all active:scale-95"
             >
-              Dashboard
+              Go to Dashboard
             </Link>
           ) : (
             <Link
               href="/login"
-              className="px-6 py-3 rounded-xl text-sm font-bold text-white
-                         bg-gradient-to-br from-[#e25e2d] to-[#f3a552]
-                         shadow-[0_15px_35px_-15px_rgba(226,94,45,0.7)]
-                         hover:scale-[1.03] transition"
+              className="px-6 py-2.5 rounded-2xl text-sm font-bold text-white
+                         bg-[#e25e2d] shadow-lg shadow-orange-100
+                         hover:bg-[#d14d1c] transition-all active:scale-95"
             >
-              Join Now
+              Join Community
             </Link>
           )}
         </div>
@@ -134,19 +134,13 @@ export default function NavBar({ variant = "landing", title, subtitle }) {
   );
 }
 
-/* ================= LINK ================= */
 function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="relative text-sm transition hover:text-[#e25e2d]"
+      className="text-sm transition-colors hover:text-orange-600"
     >
       {children}
-      <span
-        className="absolute left-0 -bottom-1 h-0.5 w-0
-                   bg-gradient-to-r from-[#e25e2d] to-[#f3a552]
-                   transition-all duration-300 hover:w-full"
-      />
     </Link>
   );
 }
