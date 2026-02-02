@@ -49,8 +49,8 @@ export default function ItemCard({ item }) {
       setTimeout(() => setShowToast(false), 3000);
     }
 
-    const event = new CustomEvent("item-added-to-cart", { 
-      detail: { source, itemName: item.name } 
+    const event = new CustomEvent("item-added-to-cart", {
+      detail: { source, itemName: item.name }
     });
     window.dispatchEvent(event);
 
@@ -103,8 +103,14 @@ export default function ItemCard({ item }) {
         className="group relative flex flex-col cursor-pointer bg-white border border-slate-200 rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-orange-200"
       >
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
-          <Image src={item.image_url || "/api/placeholder/400/320"} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-          
+          <Image
+            src={item.image_url || "/api/placeholder/400/320"}
+            alt={item.description || "Item image"}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+
           <div className="absolute top-3 left-5 flex flex-col gap-2">
             <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider text-slate-700 shadow-sm border border-slate-100">
               {item.category || "General"}
@@ -132,9 +138,9 @@ export default function ItemCard({ item }) {
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Value</p>
               <p className="text-xl font-black text-slate-900 leading-none">{item.cost === 0 ? "FREE" : formatCost(item.cost)}</p>
             </div>
-            <button 
-              disabled={issold || isAdded} 
-              onClick={(e) => { e.stopPropagation(); handleReserveItem("card"); }} 
+            <button
+              disabled={issold || isAdded}
+              onClick={(e) => { e.stopPropagation(); handleReserveItem("card"); }}
               className={`relative h-7 transition-all duration-500 rounded-2xl flex items-center justify-center shadow-lg active:scale-95
                 ${isAdded ? 'w-28 bg-emerald-500 shadow-emerald-200 cursor-default' : 'w-8 bg-orange-600 hover:bg-orange-500 cursor-pointer shadow-slate-200'}
                 ${issold && !isAdded ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}
@@ -172,10 +178,10 @@ export default function ItemCard({ item }) {
                   {/* MODAL DATE POSTED */}
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex items-center gap-3 ">
-                        <Clock size={12} className="text-orange-500" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                           {formatRelativeTime(item.created_at)}
-                        </span>
+                      <Clock size={12} className="text-orange-500" />
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        {formatRelativeTime(item.created_at)}
+                      </span>
                     </div>
                   </div>
                   <h3 className="text-4xl font-black text-slate-900 tracking-tight leading-none">{item.name}</h3>
@@ -202,11 +208,10 @@ export default function ItemCard({ item }) {
                     <button
                       onClick={() => handleReserveItem("modal")}
                       disabled={issold || isAdded}
-                      className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 ${
-                        (issold || isAdded) ? "bg-emerald-500 text-white cursor-default" : "bg-orange-600 text-white hover:bg-orange-700 shadow-xl"
-                      }`}
+                      className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 ${(issold || isAdded) ? "bg-emerald-500 text-white cursor-default" : "bg-orange-600 text-white hover:bg-orange-700 shadow-xl"
+                        }`}
                     >
-                      { (issold || isAdded) ? <><Check size={18} /> Secure Item</> : <><ShoppingBag size={18} /> Secure Item</> }
+                      {(issold || isAdded) ? <><Check size={18} /> Secure Item</> : <><ShoppingBag size={18} /> Secure Item</>}
                     </button>
                   </div>
                 </div>
