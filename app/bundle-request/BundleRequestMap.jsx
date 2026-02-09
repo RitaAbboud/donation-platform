@@ -41,7 +41,7 @@ export default function BundleRequestMap({ form, setForm }) {
           setForm((p) => ({ ...p, location: city }));
         } catch (err) {
           console.error("Reverse geocoding error:", err);
-          setForm((p) => ({ ...p, location: "Unknown" }));
+          setForm((p) => ({ ...p, location: "Beirut" }));
         }
       };
 

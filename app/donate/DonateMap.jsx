@@ -42,7 +42,7 @@ export default function DonateMap({ form, setForm }) {
           setForm((p) => ({ ...p, location: city, lat, lng }));
         } catch (err) {
           console.error("Reverse geocoding error:", err);
-          setForm((p) => ({ ...p, location: "Unknown", lat, lng }));
+          setForm((p) => ({ ...p, location: "Beirut", lat, lng }));
         }
       };
 
