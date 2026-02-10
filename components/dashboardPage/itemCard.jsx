@@ -36,6 +36,15 @@ export default function ItemCard({ item }) {
     }).format(amount);
   };
 
+  // ✅ NEW: Extract title from description
+  const getItemTitle = () => {
+    if (!item.description) return "Item";
+    // Get first line or first sentence
+    const firstLine = item.description.split('\n')[0];
+    const firstSentence = firstLine.split('.')[0];
+    return firstSentence.length > 50 ? firstSentence.substring(0, 50) + '...' : firstSentence;
+  };
+
   const cleanPhoneNumber = item.phone_number?.replace(/\D/g, "");
 
   async function handleReserveItem(source = "card") {
@@ -44,7 +53,8 @@ export default function ItemCard({ item }) {
     if (!user) { alert("Please login first"); return; }
     setIsAdded(true);
     if (source === "modal") { setShowToast(true); setTimeout(() => setShowToast(false), 3000); }
-    window.dispatchEvent(new CustomEvent("item-added-to-cart", { detail: { source, itemName: item.name } }));
+    // ✅ CHANGED: Use getItemTitle() instead of item.name
+    window.dispatchEvent(new CustomEvent("item-added-to-cart", { detail: { source, itemName: getItemTitle() } }));
     const { error } = await supabase.from("items").update({ is_sold: true, reserved_by: user.id }).eq("id", item.id);
     if (error) { setIsAdded(false); alert("Error reserving item"); } else { setisSold(true); }
   }
@@ -80,7 +90,8 @@ export default function ItemCard({ item }) {
         className="group relative flex flex-col bg-white border border-slate-100 rounded-xl overflow-hidden transition-all hover:shadow-lg active:scale-[0.97]"
       >
         <div className="relative aspect-square w-full overflow-hidden bg-slate-50">
-          <Image src={item.image_url || "/api/placeholder/400/400"} alt={item.name} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+          {/* ✅ CHANGED: Use getItemTitle() for alt text */}
+          <Image src={item.image_url || "/api/placeholder/400/400"} alt={getItemTitle()} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
           
           <div className="absolute top-1.5 left-1.5">
             <span className="bg-white/90 backdrop-blur px-1.5 py-0.5 rounded md:rounded-md text-[8px] md:text-[10px] font-black uppercase text-slate-700 shadow-sm">
@@ -102,7 +113,8 @@ export default function ItemCard({ item }) {
         {/* Info Area: Compact for side-by-side */}
         <div className="p-2 md:p-4 flex flex-col flex-1 gap-0.5">
           <div className="flex justify-between items-start gap-1">
-            <h3 className="font-bold text-slate-900 line-clamp-1 text-xs md:text-base">{item.name}</h3>
+            {/* ✅ CHANGED: Use getItemTitle() */}
+            <h3 className="font-bold text-slate-900 line-clamp-1 text-xs md:text-base">{getItemTitle()}</h3>
             <span className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase">{formatRelativeTime(item.created_at)}</span>
           </div>
           
@@ -139,7 +151,8 @@ export default function ItemCard({ item }) {
               className="w-full max-w-4xl bg-white rounded-t-3xl md:rounded-3xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
             >
               <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto bg-slate-50">
-                <Image src={item.image_url || "/api/placeholder/400/400"} alt={item.name} fill className="object-cover md:object-contain" />
+                {/* ✅ CHANGED: Use getItemTitle() for alt text */}
+                <Image src={item.image_url || "/api/placeholder/400/400"} alt={getItemTitle()} fill className="object-cover md:object-contain" />
                 <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 p-2 rounded-full bg-black/20 text-white md:hidden"><X size={20}/></button>
               </div>
 
@@ -150,7 +163,8 @@ export default function ItemCard({ item }) {
                 
                 <div className="mb-4">
                   <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest block mb-1">Posted {formatRelativeTime(item.created_at)} ago</span>
-                  <h2 className="text-2xl md:text-4xl font-black text-slate-900 leading-tight mb-1">{item.name}</h2>
+                  {/* ✅ CHANGED: Use getItemTitle() */}
+                  <h2 className="text-2xl md:text-4xl font-black text-slate-900 leading-tight mb-1">{getItemTitle()}</h2>
                   <div className="flex items-center gap-1.5 text-slate-400 font-bold text-[10px] md:text-xs uppercase">
                     <MapPin size={14} /> {item.location}
                   </div>

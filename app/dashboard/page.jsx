@@ -62,24 +62,24 @@ export default function DashboardPage() {
   const LIMIT = 8;
 
   /* ================= FETCH LOGIC ================= */
-  async function fetchItems(isInitial = false) {
+async function fetchItems(isInitial = false) {
   try {
     setLoading(true);
     const skip = isInitial ? 0 : items.length;
     const { data: { user } } = await supabase.auth.getUser();
     if (user) setUserInfo(user);
 
-    // ✅ CHANGED: Use relative URL instead of environment variable
-  const res = await fetch(`/api/items?skip=${skip}&limit=${LIMIT}`, { cache: "no-store" });
+    // ✅ Make sure it looks like THIS with parentheses
+    const res = await fetch(`/api/items?skip=${skip}&limit=${LIMIT}`, { 
+      cache: "no-store" 
+    });
 
-    // ✅ ADDED: Check if response is OK
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
     const itemsData = await res.json();
 
-    // ✅ ADDED: Handle error in response
     if (itemsData.error) {
       throw new Error(itemsData.error);
     }
@@ -88,7 +88,10 @@ export default function DashboardPage() {
 
     let bookmarkedIds = [];
     if (user) {
-      const { data: bookmarks } = await supabase.from("bookmarks").select("item_id").eq("user_id", user.id);
+      const { data: bookmarks } = await supabase
+        .from("bookmarks")
+        .select("item_id")
+        .eq("user_id", user.id);
       bookmarkedIds = bookmarks?.map((b) => b.item_id) || [];
     }
 
