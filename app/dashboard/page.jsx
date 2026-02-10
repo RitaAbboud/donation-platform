@@ -70,9 +70,7 @@ export default function DashboardPage() {
     if (user) setUserInfo(user);
 
     // ✅ CHANGED: Use relative URL instead of environment variable
-    const res = await fetch(`/api/items?skip=${skip}&limit=${LIMIT}`, { 
-      cache: "no-store" 
-    });
+  const res = await fetch(`/api/items?skip=${skip}&limit=${LIMIT}`, { cache: "no-store" });
 
     // ✅ ADDED: Check if response is OK
     if (!res.ok) {
