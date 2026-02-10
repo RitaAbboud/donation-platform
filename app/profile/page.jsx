@@ -132,7 +132,7 @@ export default function MyProfile() {
                 onClick={() => router.push("/donate")}
                 className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-[11px] sm:text-sm font-bold text-white bg-[#e25e2d] shadow-lg shadow-orange-200 active:scale-95 transition-all"
               >
-                <Plus size={16} /> Donate
+                <Plus size={16} /> Add Item
               </button>
             </div>
           </div>

@@ -118,13 +118,13 @@ export default function ItemCard({ item }) {
               disabled={issold || isAdded}
               onClick={(e) => { e.stopPropagation(); handleReserveItem("card"); }}
               className={`flex items-center justify-center rounded-lg transition-all 
-                ${isAdded ? 'bg-emerald-500 px-2 py-1' : 'bg-slate-900 p-1.5 md:px-3 md:py-2 hover:bg-orange-600'}
+                ${isAdded ? 'bg-emerald-500 px-2 py-1' : 'bg-orange-600 p-1.5 md:px-3 md:py-2 hover:bg-orange-600'}
                 ${issold && !isAdded ? 'hidden' : 'flex'}`}
             >
               {isAdded ? (
                 <Check size={12} strokeWidth={4} className="text-white" />
               ) : (
-                <><Plus size={12} strokeWidth={4} className="text-white" /><span className="hidden md:inline ml-1 text-[10px] font-black uppercase text-white">Secure</span></>
+                <><Plus size={12} strokeWidth={4} className="text-white" /></>
               )}
             </button>
           </div>
@@ -156,8 +156,8 @@ export default function ItemCard({ item }) {
                   </div>
                 </div>
 
-                <div className="mb-8 p-4 rounded-xl bg-slate-50 text-slate-600 text-sm font-medium leading-relaxed italic">
-                  "{item.description}"
+                <div className="mb-8 p-4 rounded-xl bg-slate-50 text-slate-600 text-sm font-bold leading-relaxed ">
+                  {item.description}
                 </div>
 
                 <div className="mt-auto">

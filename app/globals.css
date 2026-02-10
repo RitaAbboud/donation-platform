@@ -1,7 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  --content: "app/**/*.{js,jsx}", "components/**/*.{js,jsx}", "src/**/*.{js,jsx}";
+}
+
 html {
     scroll-behavior: smooth;
 }
+
 @keyframes cart-pop {
   0% { transform: scale(1); }
   50% { transform: scale(1.4); }

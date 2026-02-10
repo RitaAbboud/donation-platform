@@ -100,7 +100,7 @@ export default function DashNav() {
               className="flex items-center gap-1 bg-[#e25e2d] text-white px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-[11px] md:text-xs font-bold uppercase tracking-widest hover:bg-[#c94d1f] shadow-md shadow-orange-200 transition-all active:scale-95"
             >
               <Plus size={18} strokeWidth={3} className={showAddDropdown ? "rotate-45 transition-transform" : "transition-transform"} />
-              <span className="hidden sm:inline">Create</span>
+              <span className="hidden sm:inline">ADD</span>
               <ChevronDown size={14} className={`ml-1 hidden md:block transition-transform ${showAddDropdown ? "rotate-180" : ""}`} />
             </button>
 
@@ -114,7 +114,7 @@ export default function DashNav() {
                     <Plus size={18} />
                   </div>
                   <div className="flex flex-col items-start">
-                    <span className="font-bold text-xs uppercase tracking-tight">Add Item</span>
+                    <span className="font-bold text-xs uppercase tracking-tight"> Item</span>
                     <span className="text-[10px] text-gray-400">List something new</span>
                   </div>
                 </button>

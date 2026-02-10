@@ -108,10 +108,20 @@ export default function NavBar({ variant = "landing", title, subtitle }) {
                 Logout
               </button>
             ) : user ? (
-              <Link href="/dashboard" className="btn-primary">Dashboard</Link>
-            ) : (
-              <Link href="/login" className="btn-primary">Join Community</Link>
-            )}
+  <Link 
+    href="/dashboard" 
+    className="px-6 py-2.5 rounded-xl bg-[#e25e2d]  text-white text-sm font-semibold hover:from-orange-600 hover:to-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50"
+  >
+    Dashboard
+  </Link>
+) : (
+  <Link 
+    href="/login" 
+    className="px-6 py-2.5 rounded-xl bg-[#e25e2d] text-white text-sm font-semibold hover:from-orange-600 hover:to-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50"
+  >
+    Join Community
+  </Link>
+)}
           </div>
 
           {/* Hamburger Button */}

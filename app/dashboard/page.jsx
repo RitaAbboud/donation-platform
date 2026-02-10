@@ -7,7 +7,7 @@ import RequestCard from "../../components/dashboardPage/requestCard";
 import DashboardLayout from "../../components/dashboardPage/DashboardLayout";
 import { useSearch } from "../../context/SearchContext";
 import { useEffect, useState, useMemo } from "react";
-import { SlidersHorizontal, ChevronDown, X, Package, MapPin, Search as SearchIcon } from "lucide-react";
+import { SlidersHorizontal, ChevronDown, X, Package, MapPin, Search as SearchIcon ,ChevronRight} from "lucide-react";
 import { Poppins } from "next/font/google";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -159,18 +159,18 @@ export default function DashboardPage() {
     <div className="flex gap-2">
       <button 
         onClick={() => { setShowCategories(!showCategories); if(!showCategories) setShowFilters(false); }}
-        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase border transition-all ${showCategories ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-500 border-slate-200"}`}
+        className={`px-4 py-1.5 rounded-full text-[10px] font-black cursor-pointer uppercase border transition-all ${showCategories ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-500 border-slate-200"}`}
       >
         Categories
       </button>
       <button 
         onClick={() => { setShowFilters(!showFilters); if(!showFilters) setShowCategories(false); }}
-        className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black uppercase border transition-all ${showFilters ? "bg-[#e25e2d] text-white border-[#e25e2d]" : "bg-white text-[#e25e2d] border-[#fae9d7]"}`}
+        className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full cursor-pointer text-[10px] font-black uppercase border transition-all ${showFilters ? "bg-[#e25e2d] text-white border-[#e25e2d]" : "bg-white text-[#e25e2d] border-[#fae9d7]"}`}
       >
         <SlidersHorizontal size={12} /> Filters
       </button>
     </div>
-    <button onClick={resetFilters} className="text-[10px] font-bold text-slate-400 uppercase hover:text-red-500 transition-colors">
+    <button onClick={resetFilters} className="text-[10px] font-bold text-slate-400 cursor-pointer  uppercase hover:text-red-500 transition-colors">
       Reset
     </button>
   </div>
@@ -235,32 +235,48 @@ export default function DashboardPage() {
 </AnimatePresence>
 
         {/* 4. CATEGORY HORIZONTAL SCROLLER */}
-        <AnimatePresence>
-          {showCategories && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="py-10"
-            >
-              <div className="w-full overflow-x-auto no-scrollbar px-4 md:px-0">
-                <div className="flex sm:justify-center gap-8 md:gap-14 min-w-max pb-4">
-                  {categories.map((cat) => {
-                    const isActive = activeCategoryId === cat.id;
-                    return (
-                      <button key={cat.id} onClick={() => setActiveCategoryId(isActive ? "" : cat.id)} className="flex flex-col items-center gap-3 group">
-                        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 transition-all duration-300 ${isActive ? "border-[#e25e2d] shadow-lg scale-110" : "border-transparent opacity-60 group-hover:opacity-100"}`}>
-                          <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-                        </div>
-                        <span className={`text-[11px] font-bold tracking-tight transition-colors ${isActive ? "text-slate-900" : "text-slate-400"}`}>{cat.name}</span>
-                      </button>
-                    );
-                  })}
+<AnimatePresence>
+  {showCategories && (
+    <motion.div 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="py-10"
+    >
+      {/* Swipe Indicator - Top Right */}
+      <motion.div 
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="flex justify-end items-center gap-2 text-slate-400 mb-4 pr-4 sm:hidden"
+      >
+        <span className="text-xs font-medium">Swipe</span>
+        <motion.div
+          animate={{ x: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronRight size={20} strokeWidth={2.5} />
+        </motion.div>
+      </motion.div>
+
+      <div className="w-full overflow-x-auto no-scrollbar px-4 md:px-0">
+        <div className="flex sm:justify-center gap-8 md:gap-14 min-w-max pb-4">
+          {categories.map((cat) => {
+            const isActive = activeCategoryId === cat.id;
+            return (
+              <button key={cat.id} onClick={() => setActiveCategoryId(isActive ? "" : cat.id)} className="flex flex-col items-center gap-3 group">
+                <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 transition-all duration-300 ${isActive ? "border-[#e25e2d] shadow-lg scale-110" : "border-transparent opacity-60 group-hover:opacity-100"}`}>
+                  <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <span className={`text-[11px] font-bold tracking-tight transition-colors ${isActive ? "text-slate-900" : "text-slate-400"}`}>{cat.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
        {/* ================= REFINED CONTENT AREA ================= */}
 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
