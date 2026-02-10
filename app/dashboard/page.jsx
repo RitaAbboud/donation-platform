@@ -63,36 +63,50 @@ export default function DashboardPage() {
 
   /* ================= FETCH LOGIC ================= */
   async function fetchItems(isInitial = false) {
-    try {
-      setLoading(true);
-      const skip = isInitial ? 0 : items.length;
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserInfo(user);
+  try {
+    setLoading(true);
+    const skip = isInitial ? 0 : items.length;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) setUserInfo(user);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/items?skip=${skip}&limit=${LIMIT}`, { cache: "no-store" });
-      const itemsData = await res.json();
+    // ✅ CHANGED: Use relative URL instead of environment variable
+    const res = await fetch(`/api/items?skip=${skip}&limit=${LIMIT}`, { 
+      cache: "no-store" 
+    });
 
-      if (itemsData.length < LIMIT) setHasMore(false);
-
-      let bookmarkedIds = [];
-      if (user) {
-        const { data: bookmarks } = await supabase.from("bookmarks").select("item_id").eq("user_id", user.id);
-        bookmarkedIds = bookmarks?.map((b) => b.item_id) || [];
-      }
-
-      const mergedData = itemsData.map((item) => ({
-        ...item,
-        category: categoriesMap[item.category_id],
-        is_bookmarked: bookmarkedIds.includes(item.id),
-      }));
-
-      setItems(isInitial ? mergedData : [...items, ...mergedData]);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    } finally {
-      setLoading(false);
+    // ✅ ADDED: Check if response is OK
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
+
+    const itemsData = await res.json();
+
+    // ✅ ADDED: Handle error in response
+    if (itemsData.error) {
+      throw new Error(itemsData.error);
+    }
+
+    if (itemsData.length < LIMIT) setHasMore(false);
+
+    let bookmarkedIds = [];
+    if (user) {
+      const { data: bookmarks } = await supabase.from("bookmarks").select("item_id").eq("user_id", user.id);
+      bookmarkedIds = bookmarks?.map((b) => b.item_id) || [];
+    }
+
+    const mergedData = itemsData.map((item) => ({
+      ...item,
+      category: categoriesMap[item.category_id],
+      is_bookmarked: bookmarkedIds.includes(item.id),
+    }));
+
+    setItems(isInitial ? mergedData : [...items, ...mergedData]);
+  } catch (err) {
+    console.error("Fetch error:", err);
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => {
     fetchItems(true);
